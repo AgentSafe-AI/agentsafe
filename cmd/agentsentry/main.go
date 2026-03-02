@@ -8,10 +8,10 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/AgentSafe-AI/agentsafe/pkg/adapter/mcp"
-	"github.com/AgentSafe-AI/agentsafe/pkg/analyzer"
-	"github.com/AgentSafe-AI/agentsafe/pkg/gateway"
-	"github.com/AgentSafe-AI/agentsafe/pkg/model"
+	"github.com/AgentSafe-AI/agentsentry/pkg/adapter/mcp"
+	"github.com/AgentSafe-AI/agentsentry/pkg/analyzer"
+	"github.com/AgentSafe-AI/agentsentry/pkg/gateway"
+	"github.com/AgentSafe-AI/agentsentry/pkg/model"
 )
 
 // version is set at build time via -ldflags.
@@ -25,7 +25,7 @@ func main() {
 
 func newRootCmd() *cobra.Command {
 	root := &cobra.Command{
-		Use:   "agentsafe",
+		Use:   "agentsentry",
 		Short: "AI Agent Tool Security Scanner",
 		Long:  "AgentSafe scans AI agent tool definitions for security risks and generates gateway policies.",
 	}
@@ -39,7 +39,7 @@ func newVersionCmd() *cobra.Command {
 		Use:   "version",
 		Short: "Print the AgentSafe version",
 		Run: func(_ *cobra.Command, _ []string) {
-			fmt.Println("agentsafe", version)
+			fmt.Println("agentsentry", version)
 		},
 	}
 }
@@ -68,8 +68,8 @@ func newScanCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "scan",
 		Short: "Scan tool definitions and generate gateway policies",
-		Example: `  agentsafe scan --protocol mcp --input tools.json
-  agentsafe scan --protocol mcp --input tools.json --output report.json`,
+		Example: `  agentsentry scan --protocol mcp --input tools.json
+  agentsentry scan --protocol mcp --input tools.json --output report.json`,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			return runScan(cmd.Context(), inputFile, protocol, outputFile)
 		},

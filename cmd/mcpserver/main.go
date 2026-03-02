@@ -12,10 +12,10 @@ import (
 	mcplib "github.com/mark3labs/mcp-go/mcp"
 	"github.com/mark3labs/mcp-go/server"
 
-	"github.com/AgentSafe-AI/agentsafe/pkg/adapter/mcp"
-	"github.com/AgentSafe-AI/agentsafe/pkg/analyzer"
-	"github.com/AgentSafe-AI/agentsafe/pkg/gateway"
-	"github.com/AgentSafe-AI/agentsafe/pkg/model"
+	"github.com/AgentSafe-AI/agentsentry/pkg/adapter/mcp"
+	"github.com/AgentSafe-AI/agentsentry/pkg/analyzer"
+	"github.com/AgentSafe-AI/agentsentry/pkg/gateway"
+	"github.com/AgentSafe-AI/agentsentry/pkg/model"
 )
 
 // version is set at build time via -ldflags.
@@ -23,14 +23,14 @@ var version = "dev"
 
 func main() {
 	srv := server.NewMCPServer(
-		"agentsafe",
+		"agentsentry",
 		version,
 	)
 
 	srv.AddTool(buildScanTool(), handleScan)
 
 	if err := server.ServeStdio(srv); err != nil {
-		fmt.Fprintf(os.Stderr, "agentsafe mcp server error: %v\n", err)
+		fmt.Fprintf(os.Stderr, "agentsentry mcp server error: %v\n", err)
 		os.Exit(1)
 	}
 }
@@ -38,7 +38,7 @@ func main() {
 // buildScanTool defines the MCP tool schema for the scan capability.
 func buildScanTool() mcplib.Tool {
 	return mcplib.NewTool(
-		"agentsafe_scan",
+		"agentsentry_scan",
 		mcplib.WithDescription(
 			"Scan a list of AI agent tool definitions for security risks. "+
 				"Accepts an MCP tools/list JSON payload and returns a risk report "+
@@ -56,7 +56,7 @@ func buildScanTool() mcplib.Tool {
 	)
 }
 
-// ScanResult is the JSON shape returned by the agentsafe_scan tool.
+// ScanResult is the JSON shape returned by the agentsentry_scan tool.
 type ScanResult struct {
 	Policies []model.GatewayPolicy `json:"policies"`
 	Summary  ScanSummary           `json:"summary"`
@@ -70,7 +70,7 @@ type ScanSummary struct {
 	Blocked  int `json:"blocked"`
 }
 
-// handleScan is the ToolHandlerFunc for the agentsafe_scan MCP tool.
+// handleScan is the ToolHandlerFunc for the agentsentry_scan MCP tool.
 func handleScan(ctx context.Context, req mcplib.CallToolRequest) (*mcplib.CallToolResult, error) {
 	toolsJSON, ok := req.GetArguments()["tools_json"].(string)
 	if !ok || toolsJSON == "" {

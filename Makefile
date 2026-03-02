@@ -1,17 +1,17 @@
-BINARY_CLI    := agentsafe
-BINARY_MCP    := agentsafe-mcp
+BINARY_CLI    := agentsentry
+BINARY_MCP    := agentsentry-mcp
 VERSION       ?= $(shell git describe --tags --always --dirty 2>/dev/null || echo "dev")
 LDFLAGS       := -ldflags "-X main.version=$(VERSION) -s -w"
 
 BUILD_DIR     := dist
-CLI_PKG       := ./cmd/agentsafe
+CLI_PKG       := ./cmd/agentsentry
 MCP_PKG       := ./cmd/mcpserver
 
 GO            := go
 GOTEST        := $(GO) test -race -count=1
 
 # Docker / GHCR settings (override via env or CLI)
-IMAGE_REPO    ?= ghcr.io/agentsafe/agentsafe
+IMAGE_REPO    ?= ghcr.io/agentsafe-ai/agentsentry
 IMAGE_TAG     ?= $(VERSION)
 
 # Cross-compile targets: GOOS/GOARCH pairs
@@ -115,9 +115,9 @@ docker-push: docker-build
 	docker push $(IMAGE_REPO):$(IMAGE_TAG)
 	docker push $(IMAGE_REPO):latest
 
-# ── AgentSafe Self-Scan ───────────────────────────────────────────────────────
+# ── AgentSentry Self-Scan ───────────────────────────────────────────────────────
 
-## scan: run AgentSafe against testdata/tools.json (if present)
+## scan: run AgentSentry against testdata/tools.json (if present)
 scan: build-cli
 	@if [ -f testdata/tools.json ]; then \
 		$(BUILD_DIR)/$(BINARY_CLI) scan --protocol mcp --input testdata/tools.json; \

@@ -90,16 +90,16 @@ jobs:
           go-version: "1.24"
           cache: true
 
-      - name: Build agentsafe
-        run: go build -o /tmp/agentsafe ./cmd/agentsafe/
+      - name: Build agentsentry
+        run: go build -o /tmp/agentsentry ./cmd/agentsentry/
 
       - name: Run meta-scan against project's MCP tool fixtures
         run: |
           if [ -f testdata/tools.json ]; then
-            /tmp/agentsafe scan --protocol mcp --input testdata/tools.json --output /tmp/meta_scan.json
+            /tmp/agentsentry scan --protocol mcp --input testdata/tools.json --output /tmp/meta_scan.json
           else
             echo '{"tools":[]}' > /tmp/empty.json
-            /tmp/agentsafe scan --protocol mcp --input /tmp/empty.json --output /tmp/meta_scan.json
+            /tmp/agentsentry scan --protocol mcp --input /tmp/empty.json --output /tmp/meta_scan.json
           fi
           cat /tmp/meta_scan.json
 

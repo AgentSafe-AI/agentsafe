@@ -6,7 +6,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/AgentSafe-AI/agentsafe/pkg/model"
+	"github.com/AgentSafe-AI/agentsentry/pkg/model"
 )
 
 // severityWeight maps a Severity to its numeric risk contribution.
@@ -31,12 +31,15 @@ type Scanner struct {
 }
 
 // NewScanner returns a Scanner wired with all default checkers.
+// Supply chain (AS-004) uses the live OSV API; for tests inject a mock via
+// NewScannerWithCheckers or use Engine.Scan which calls the real checker.
 func NewScanner() *Scanner {
 	return &Scanner{
 		checkers: []checker{
 			NewPoisoningChecker(),
 			NewPermissionChecker(),
 			NewScopeChecker(),
+			NewSupplyChainChecker(),
 		},
 	}
 }

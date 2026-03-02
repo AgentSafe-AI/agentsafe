@@ -6,8 +6,8 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/AgentSafe-AI/agentsafe/pkg/gateway"
-	"github.com/AgentSafe-AI/agentsafe/pkg/model"
+	"github.com/AgentSafe-AI/agentsentry/pkg/gateway"
+	"github.com/AgentSafe-AI/agentsentry/pkg/model"
 )
 
 func TestEvaluate_GradeA_Allow(t *testing.T) {

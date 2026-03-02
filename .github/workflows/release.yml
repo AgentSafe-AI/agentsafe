@@ -67,18 +67,18 @@ jobs:
 
           go build \
             -ldflags "-X main.version=${VERSION} -s -w" \
-            -o "dist/agentsafe_${{ matrix.goos }}_${{ matrix.goarch }}${SUFFIX}" \
-            ./cmd/agentsafe/
+            -o "dist/agentsentry_${{ matrix.goos }}_${{ matrix.goarch }}${SUFFIX}" \
+            ./cmd/agentsentry/
 
           go build \
             -ldflags "-X main.version=${VERSION} -s -w" \
-            -o "dist/agentsafe-mcp_${{ matrix.goos }}_${{ matrix.goarch }}${SUFFIX}" \
+            -o "dist/agentsentry-mcp_${{ matrix.goos }}_${{ matrix.goarch }}${SUFFIX}" \
             ./cmd/mcpserver/
 
       - name: Generate checksums
         run: |
           cd dist
-          sha256sum agentsafe_* agentsafe-mcp_* > checksums_${{ matrix.goos }}_${{ matrix.goarch }}.txt
+          sha256sum agentsentry_* agentsentry-mcp_* > checksums_${{ matrix.goos }}_${{ matrix.goarch }}.txt
 
       - name: Upload binary artifacts
         uses: actions/upload-artifact@v4
@@ -111,8 +111,8 @@ jobs:
         with:
           generate_release_notes: true
           files: |
-            dist/agentsafe_*
-            dist/agentsafe-mcp_*
+            dist/agentsentry_*
+            dist/agentsentry-mcp_*
             dist/checksums_*
 
   # ── 4. Build and push Docker image to GHCR ────────────────────────────────

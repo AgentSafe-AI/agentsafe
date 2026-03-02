@@ -3,7 +3,7 @@ package analyzer
 import (
 	"fmt"
 
-	"github.com/AgentSafe-AI/agentsafe/pkg/model"
+	"github.com/AgentSafe-AI/agentsentry/pkg/model"
 )
 
 const largeSchemaPropThreshold = 10
@@ -44,7 +44,7 @@ func (c *PermissionChecker) Check(tool model.UnifiedTool) ([]model.Issue, error)
 
 	if propCount := len(tool.InputSchema.Properties); propCount > largeSchemaPropThreshold {
 		issues = append(issues, model.Issue{
-			RuleID:      "AS-003",
+			RuleID:      "AS-002",
 			Severity:    model.SeverityLow,
 			Code:        "LARGE_INPUT_SURFACE",
 			Description: fmt.Sprintf("input schema exposes %d properties (threshold: %d)", propCount, largeSchemaPropThreshold),

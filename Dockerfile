@@ -17,12 +17,12 @@ COPY . .
 # Build both binaries with optimised flags: no CGO, stripped symbols
 RUN CGO_ENABLED=0 go build \
       -ldflags "-X main.version=${VERSION} -s -w" \
-      -o /out/agentsafe \
-      ./cmd/agentsafe/
+      -o /out/agentsentry \
+      ./cmd/agentsentry/
 
 RUN CGO_ENABLED=0 go build \
       -ldflags "-X main.version=${VERSION} -s -w" \
-      -o /out/agentsafe-mcp \
+      -o /out/agentsentry-mcp \
       ./cmd/mcpserver/
 
 # ── Stage 2: Minimal runtime image ───────────────────────────────────────────
@@ -35,15 +35,15 @@ COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 COPY --from=builder /usr/share/zoneinfo /usr/share/zoneinfo
 
 # Copy compiled binaries
-COPY --from=builder /out/agentsafe     /usr/local/bin/agentsafe
-COPY --from=builder /out/agentsafe-mcp /usr/local/bin/agentsafe-mcp
+COPY --from=builder /out/agentsentry     /usr/local/bin/agentsentry
+COPY --from=builder /out/agentsentry-mcp /usr/local/bin/agentsentry-mcp
 
 # Default: run the CLI
-ENTRYPOINT ["/usr/local/bin/agentsafe"]
+ENTRYPOINT ["/usr/local/bin/agentsentry"]
 CMD ["--help"]
 
 # Metadata labels (OCI standard)
 LABEL org.opencontainers.image.title="AgentSafe"
 LABEL org.opencontainers.image.description="AI Agent Tool Security Scanner"
-LABEL org.opencontainers.image.source="https://github.com/AgentSafe-AI/agentsafe"
+LABEL org.opencontainers.image.source="https://github.com/AgentSafe-AI/agentsentry"
 LABEL org.opencontainers.image.licenses="MIT"

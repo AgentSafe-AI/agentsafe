@@ -6,8 +6,8 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/AgentSafe-AI/agentsafe/pkg/analyzer"
-	"github.com/AgentSafe-AI/agentsafe/pkg/model"
+	"github.com/AgentSafe-AI/agentsentry/pkg/analyzer"
+	"github.com/AgentSafe-AI/agentsentry/pkg/model"
 )
 
 func TestScopeChecker_NoMismatch(t *testing.T) {

@@ -7,7 +7,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/AgentSafe-AI/agentsafe/internal/jsonschema"
+	"github.com/AgentSafe-AI/agentsentry/internal/jsonschema"
 )
 
 func TestSchema_PropertyNames(t *testing.T) {

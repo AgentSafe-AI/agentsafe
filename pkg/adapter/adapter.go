@@ -5,7 +5,7 @@ package adapter
 import (
 	"context"
 
-	"github.com/AgentSafe-AI/agentsafe/pkg/model"
+	"github.com/AgentSafe-AI/agentsentry/pkg/model"
 )
 
 // Adapter converts a protocol-specific tool list payload into a slice of

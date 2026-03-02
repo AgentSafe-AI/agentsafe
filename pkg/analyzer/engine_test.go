@@ -6,8 +6,8 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/AgentSafe-AI/agentsafe/pkg/analyzer"
-	"github.com/AgentSafe-AI/agentsafe/pkg/model"
+	"github.com/AgentSafe-AI/agentsentry/pkg/analyzer"
+	"github.com/AgentSafe-AI/agentsentry/pkg/model"
 )
 
 // ---------------------------------------------------------------------------
@@ -103,7 +103,7 @@ func TestEngine_AS002_NoPermissions_NoFinding(t *testing.T) {
 }
 
 // ---------------------------------------------------------------------------
-// AS-004 — ScopeMismatch
+// AS-003 — ScopeMismatch
 // ---------------------------------------------------------------------------
 
 func TestEngine_AS004_ReadNameWithExecPermission(t *testing.T) {
@@ -113,8 +113,8 @@ func TestEngine_AS004_ReadNameWithExecPermission(t *testing.T) {
 		Permissions: []model.Permission{model.PermissionExec},
 	}
 	report := analyzer.NewEngine().Scan(tool)
-	assert.True(t, report.HasFinding("AS-004"),
-		"read-named tool with exec permission must trigger AS-004")
+	assert.True(t, report.HasFinding("AS-003"),
+		"read-named tool with exec permission must trigger AS-003")
 }
 
 func TestEngine_AS004_CleanReadTool_NoFinding(t *testing.T) {
@@ -124,8 +124,8 @@ func TestEngine_AS004_CleanReadTool_NoFinding(t *testing.T) {
 		Permissions: []model.Permission{model.PermissionFS},
 	}
 	report := analyzer.NewEngine().Scan(tool)
-	assert.False(t, report.HasFinding("AS-004"),
-		"read-named tool with only fs permission must not trigger AS-004")
+	assert.False(t, report.HasFinding("AS-003"),
+		"read-named tool with only fs permission must not trigger AS-003")
 }
 
 // ---------------------------------------------------------------------------
@@ -155,7 +155,7 @@ func TestEngine_WeightedScore_CriticalPlusHigh(t *testing.T) {
 		Permissions: []model.Permission{model.PermissionExec},
 	}
 	report := analyzer.NewEngine().Scan(tool)
-	// AS-001 (25) + AS-002 exec HIGH (15) + AS-004 scope mismatch HIGH (15) = 55
+	// AS-001 (25) + AS-002 exec HIGH (15) + AS-003 scope mismatch HIGH (15) = 55
 	assert.GreaterOrEqual(t, report.RiskScore, 55)
 	assert.True(t, report.Grade == model.GradeC || report.Grade == model.GradeD,
 		"combined critical+high findings should reach Grade C or D")

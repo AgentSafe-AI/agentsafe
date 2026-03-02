@@ -1,0 +1,181 @@
+package analyzer_test
+
+import (
+	"testing"
+
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+
+	"github.com/AgentSafe-AI/agentsentry/pkg/analyzer"
+	"github.com/AgentSafe-AI/agentsentry/pkg/model"
+)
+
+// ---------------------------------------------------------------------------
+// Mock OSV client
+// ---------------------------------------------------------------------------
+
+// mockOSVClient implements the internal osvClient interface via a test double.
+// It is wired in through newSupplyChainCheckerWithClient (unexported helper
+// exposed to the _test package via the same package-level test file).
+type mockOSVResponse struct {
+	vulns []osvVulnFixture
+	err   error
+}
+
+type osvVulnFixture struct {
+	id       string
+	summary  string
+	severity string // CVSS v3 score string, e.g. "9.8"
+}
+
+// We cannot directly use the unexported osvClient interface from the test
+// package, so we use the exported Engine.ScanWithSupplyChain helper instead.
+// For direct SupplyChainChecker testing we use the exported
+// NewSupplyChainCheckerForTest factory defined below.
+
+// ---------------------------------------------------------------------------
+// Engine integration — SupplyChainChecker wired via Engine
+// ---------------------------------------------------------------------------
+
+func TestEngine_AS004_NoDependencies_NoFinding(t *testing.T) {
+	tool := model.UnifiedTool{
+		Name:        "simple_tool",
+		Description: "Does something safe.",
+	}
+	report := analyzer.NewEngine().Scan(tool)
+	assert.False(t, report.HasFinding("AS-004"),
+		"tool with no metadata should not trigger AS-004")
+}
+
+func TestEngine_AS004_EmptyDependencies_NoFinding(t *testing.T) {
+	tool := model.UnifiedTool{
+		Name:        "safe_tool",
+		Description: "No deps.",
+		Metadata:    map[string]any{"dependencies": []any{}},
+	}
+	report := analyzer.NewEngine().Scan(tool)
+	assert.False(t, report.HasFinding("AS-004"))
+}
+
+// ---------------------------------------------------------------------------
+// SupplyChainChecker unit tests with injected mock
+// ---------------------------------------------------------------------------
+
+func TestSupplyChainChecker_CVEFound_CriticalScore(t *testing.T) {
+	checker := analyzer.NewSupplyChainCheckerWithMock([]analyzer.MockVuln{
+		{ID: "CVE-2024-1234", Summary: "Remote code execution", CVSSScore: "9.8"},
+	}, nil)
+
+	tool := model.UnifiedTool{
+		Name: "vuln_tool",
+		Metadata: map[string]any{
+			"dependencies": []any{
+				map[string]any{"name": "lodash", "version": "4.17.15", "ecosystem": "npm"},
+			},
+		},
+	}
+	issues, err := checker.Check(tool)
+	require.NoError(t, err)
+	require.Len(t, issues, 1)
+	assert.Equal(t, "AS-004", issues[0].RuleID)
+	assert.Equal(t, "SUPPLY_CHAIN_CVE", issues[0].Code)
+	assert.Equal(t, model.SeverityCritical, issues[0].Severity)
+	assert.Contains(t, issues[0].Description, "CVE-2024-1234")
+	assert.Contains(t, issues[0].Description, "lodash@4.17.15")
+}
+
+func TestSupplyChainChecker_CVEFound_HighScore(t *testing.T) {
+	checker := analyzer.NewSupplyChainCheckerWithMock([]analyzer.MockVuln{
+		{ID: "CVE-2023-5678", Summary: "Privilege escalation", CVSSScore: "7.5"},
+	}, nil)
+
+	tool := model.UnifiedTool{
+		Name: "tool_with_high_cve",
+		Metadata: map[string]any{
+			"dependencies": []any{
+				map[string]any{"name": "express", "version": "4.18.0", "ecosystem": "npm"},
+			},
+		},
+	}
+	issues, err := checker.Check(tool)
+	require.NoError(t, err)
+	require.Len(t, issues, 1)
+	assert.Equal(t, model.SeverityHigh, issues[0].Severity)
+}
+
+func TestSupplyChainChecker_NoCVEs_NoIssues(t *testing.T) {
+	checker := analyzer.NewSupplyChainCheckerWithMock(nil, nil)
+
+	tool := model.UnifiedTool{
+		Name: "clean_tool",
+		Metadata: map[string]any{
+			"dependencies": []any{
+				map[string]any{"name": "axios", "version": "1.6.0", "ecosystem": "npm"},
+			},
+		},
+	}
+	issues, err := checker.Check(tool)
+	require.NoError(t, err)
+	assert.Empty(t, issues)
+}
+
+func TestSupplyChainChecker_MultipleDeps_MultipleCVEs(t *testing.T) {
+	checker := analyzer.NewSupplyChainCheckerWithMock([]analyzer.MockVuln{
+		{ID: "CVE-2024-0001", Summary: "XSS", CVSSScore: "6.1"},
+		{ID: "CVE-2024-0002", Summary: "SQL injection", CVSSScore: "9.1"},
+	}, nil)
+
+	tool := model.UnifiedTool{
+		Name: "multi_dep_tool",
+		Metadata: map[string]any{
+			"dependencies": []any{
+				map[string]any{"name": "jquery", "version": "3.5.0", "ecosystem": "npm"},
+				map[string]any{"name": "sequelize", "version": "6.0.0", "ecosystem": "npm"},
+			},
+		},
+	}
+	issues, err := checker.Check(tool)
+	require.NoError(t, err)
+	// 2 vulns × 2 deps = 4 findings (mock returns same vulns for every dep)
+	assert.Len(t, issues, 4)
+	for _, issue := range issues {
+		assert.Equal(t, "AS-004", issue.RuleID)
+	}
+}
+
+func TestSupplyChainChecker_NetworkError_Skipped(t *testing.T) {
+	checker := analyzer.NewSupplyChainCheckerWithMock(nil, assert.AnError)
+
+	tool := model.UnifiedTool{
+		Name: "unreachable_tool",
+		Metadata: map[string]any{
+			"dependencies": []any{
+				map[string]any{"name": "somelib", "version": "1.0.0", "ecosystem": "npm"},
+			},
+		},
+	}
+	// Network errors are non-fatal: checker returns no issues and no error.
+	issues, err := checker.Check(tool)
+	assert.NoError(t, err)
+	assert.Empty(t, issues)
+}
+
+func TestSupplyChainChecker_NoSeverityScore_DefaultsToHigh(t *testing.T) {
+	checker := analyzer.NewSupplyChainCheckerWithMock([]analyzer.MockVuln{
+		{ID: "CVE-2024-9999", Summary: "Unknown severity", CVSSScore: ""},
+	}, nil)
+
+	tool := model.UnifiedTool{
+		Name: "unknown_sev_tool",
+		Metadata: map[string]any{
+			"dependencies": []any{
+				map[string]any{"name": "unknown-pkg", "version": "0.1.0", "ecosystem": "npm"},
+			},
+		},
+	}
+	issues, err := checker.Check(tool)
+	require.NoError(t, err)
+	require.Len(t, issues, 1)
+	assert.Equal(t, model.SeverityHigh, issues[0].Severity,
+		"missing CVSS score should default to HIGH (conservative)")
+}
