@@ -10,13 +10,14 @@ import (
 )
 
 // severityWeight maps a Severity to its numeric risk contribution.
-// Weights match the published formula: Critical(25) High(15) Medium(8) Low(3).
+// Weights align with ToolTrust Directory methodology v1.0:
+// Critical(25)  High(15)  Medium(8)  Low(2)  Info(0).
 var severityWeight = map[model.Severity]int{
 	model.SeverityCritical: 25,
 	model.SeverityHigh:     15,
 	model.SeverityMedium:   8,
-	model.SeverityLow:      3,
-	model.SeverityInfo:     1,
+	model.SeverityLow:      2,
+	model.SeverityInfo:     0,
 }
 
 // checker is an internal interface for a single analysis pass.
@@ -36,10 +37,13 @@ type Scanner struct {
 func NewScanner() *Scanner {
 	return &Scanner{
 		checkers: []checker{
-			NewPoisoningChecker(),
-			NewPermissionChecker(),
-			NewScopeChecker(),
-			NewSupplyChainChecker(),
+			NewPoisoningChecker(),           // AS-001
+			NewPermissionChecker(),          // AS-002
+			NewScopeChecker(),               // AS-003
+			NewSupplyChainChecker(),         // AS-004
+			NewPrivilegeEscalationChecker(), // AS-005
+			NewSecretHandlingChecker(),      // AS-010
+			NewDoSResilienceChecker(),       // AS-011
 		},
 	}
 }

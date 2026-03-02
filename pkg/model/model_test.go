@@ -22,20 +22,22 @@ func TestUnifiedTool_HasPermission(t *testing.T) {
 // --- RiskScore / Grade ---
 
 func TestGradeFromScore(t *testing.T) {
+	// Boundaries: A:0–9  B:10–24  C:25–49  D:50–74  F:75+
+	// Source: ToolTrust Directory methodology v1.0
 	cases := []struct {
 		name  string
 		score int
 		want  model.Grade
 	}{
 		{"A lower", 0, model.GradeA},
-		{"A upper", 10, model.GradeA},
-		{"B lower", 11, model.GradeB},
-		{"B upper", 25, model.GradeB},
-		{"C lower", 26, model.GradeC},
-		{"C upper", 50, model.GradeC},
-		{"D lower", 51, model.GradeD},
-		{"D upper", 75, model.GradeD},
-		{"F lower", 76, model.GradeF},
+		{"A upper", 9, model.GradeA},
+		{"B lower", 10, model.GradeB},
+		{"B upper", 24, model.GradeB},
+		{"C lower", 25, model.GradeC},
+		{"C upper", 49, model.GradeC},
+		{"D lower", 50, model.GradeD},
+		{"D upper", 74, model.GradeD},
+		{"F lower", 75, model.GradeF},
 		{"F large", 200, model.GradeF},
 	}
 	for _, tc := range cases {

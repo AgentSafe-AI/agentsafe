@@ -23,15 +23,17 @@ const (
 )
 
 // GradeFromScore maps a numeric score to a Grade letter.
+// Boundaries align with the ToolTrust Directory methodology v1.0:
+// A:0–9  B:10–24  C:25–49  D:50–74  F:75+.
 func GradeFromScore(score int) Grade {
 	switch {
-	case score <= 10:
+	case score <= 9:
 		return GradeA
-	case score <= 25:
+	case score <= 24:
 		return GradeB
-	case score <= 50:
+	case score <= 49:
 		return GradeC
-	case score <= 75:
+	case score <= 74:
 		return GradeD
 	default:
 		return GradeF
