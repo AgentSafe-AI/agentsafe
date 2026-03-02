@@ -15,6 +15,8 @@ AI agents blindly trust the tools they call. A single poisoned tool definition c
 
 ## Scan catalog
 
+> Full specification and severity weights: [ToolTrust Methodology v1.0](https://github.com/AgentSafe-AI/tooltrust-directory/blob/main/docs/methodology.md)
+
 | Rule | ID | Solves |
 |------|----|--------|
 | 🛡️ **Tool Poisoning** | AS-001 | Agents manipulated by malicious instructions hidden in tool descriptions (`ignore previous instructions`, `system:`, `<INST>`) |
@@ -22,7 +24,7 @@ AI agents blindly trust the tools they call. A single poisoned tool definition c
 | 📐 **Scope Mismatch** | AS-003 | Tool names that contradict their permissions, confusing the agent about what a tool actually does (`read_config` secretly holding `exec`) |
 | 📦 **Supply Chain (CVE)** | AS-004 | Third-party libraries bundled by a tool that carry known CVE vulnerabilities — queried live from the [OSV database](https://osv.dev) |
 | 🔓 **Privilege Escalation** | AS-005 | OAuth/token scopes broader than the tool's stated purpose (`admin`, `:write` wildcards) or description-level escalation signals (`sudo`, `impersonate`) |
-| 🔑 **Secret Handling** | AS-010 | Input parameters that accept API keys, passwords, or tokens (leakage risk in agent traces) and descriptions that suggest credentials are logged or stored insecurely |
+| 🗝️ **Secret Handling** | AS-010 | Input parameters that accept API keys, passwords, or tokens (leakage risk in agent traces) and descriptions that suggest credentials are logged or stored insecurely |
 | ⚡ **DoS Resilience** | AS-011 | Network or execution tools that declare no rate-limit, timeout, or retry configuration — creating runaway resource consumption risk |
 
 ## Risk grades
