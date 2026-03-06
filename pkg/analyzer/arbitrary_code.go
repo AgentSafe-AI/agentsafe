@@ -7,19 +7,47 @@ import (
 	"github.com/AgentSafe-AI/tooltrust-scanner/pkg/model"
 )
 
-// arbitraryCodeKeywords are phrases that imply the tool can execute arbitrary
-// script/code (danger equivalent to exec). Found in tool name or description.
+// arbitraryCodeKeywords are exact phrases that imply arbitrary script/code
+// execution found in tool name or description.
 var arbitraryCodeKeywords = []string{
 	"evaluate_script",
 	"evaluate script",
 	"execute javascript",
+	"execute js",
 	"run script",
 	"execute script",
 	"browser injection",
+	"arbitrary code",
+	"arbitrary script",
 }
 
-// evalWordBoundary matches "eval" as a whole word (avoids false positives like "retrieval").
-var evalWordBoundary = regexp.MustCompile(`(?i)\beval\b`)
+// arbitraryCodePatterns are compiled regexes for natural language variants
+// that the exact keyword list can't cover (e.g. "evaluates a JavaScript expression").
+var arbitraryCodePatterns = []*regexp.Regexp{
+	// "eval" as a whole word — avoids "retrieval", "revalidate", etc.
+	regexp.MustCompile(`(?i)\beval\b`),
+	// "evaluates … javascript / js / script / expression / code"
+	regexp.MustCompile(`(?i)evaluat\w*\s+\w*\s*(javascript|js|script|expression|code)`),
+	// "execute … javascript / js / arbitrary / script"
+	regexp.MustCompile(`(?i)execut\w*\s+\w*\s*(javascript|js|arbitrary|script)`),
+	// "run(s) … javascript / arbitrary … code/script"
+	regexp.MustCompile(`(?i)runs?\s+\w*\s*(javascript|arbitrary\s+(code|script))`),
+	// "inject … script / code"
+	regexp.MustCompile(`(?i)inject\w*\s+\w*\s*(script|code)`),
+	// page.evaluate() / frame.evaluate() / window.eval — common in CDP/Puppeteer
+	regexp.MustCompile(`(?i)(page|frame|window|document)\.(eval|evaluate)\b`),
+}
+
+// arbitraryCodeNameSuffixes are tool-name suffixes that strongly signal JS
+// evaluation (e.g. chrome_evaluate, puppeteer_evaluate, cdp_eval).
+var arbitraryCodeNameSuffixes = []string{
+	"_evaluate",
+	"_eval",
+	"evaluatescript",
+	"executescript",
+	"executejavascript",
+	"_runscript",
+}
 
 // ArbitraryCodeChecker detects tools that can execute arbitrary script or
 // code (e.g. evaluate_script, execute JavaScript, browser injection).
@@ -35,18 +63,34 @@ func (c *ArbitraryCodeChecker) Check(tool model.UnifiedTool) ([]model.Issue, err
 	nameLower := strings.ToLower(strings.TrimSpace(tool.Name))
 	descLower := strings.ToLower(strings.TrimSpace(tool.Description))
 
+	// 1. Exact keyword match in name (normalised) or description.
 	for _, kw := range arbitraryCodeKeywords {
 		kwNorm := strings.ReplaceAll(kw, " ", "")
 		kwSnake := strings.ReplaceAll(kw, " ", "_")
-		if strings.Contains(nameLower, kwNorm) || strings.Contains(nameLower, kwSnake) ||
-			strings.Contains(descLower, kw) {
+		nameMatch := strings.Contains(nameLower, kwNorm) ||
+			strings.Contains(nameLower, kwSnake) ||
+			strings.Contains(nameLower, strings.ReplaceAll(kw, " ", ""))
+		descMatch := strings.Contains(descLower, kw)
+		if nameMatch || descMatch {
 			return emitArbitraryCodeFinding(), nil
 		}
 	}
-	// "eval" as whole word (avoids "retrieval", "evaluate" in isolation)
-	if evalWordBoundary.MatchString(nameLower) || evalWordBoundary.MatchString(descLower) {
-		return emitArbitraryCodeFinding(), nil
+
+	// 2. Name-suffix patterns (e.g. chrome_evaluate, cdp_eval).
+	for _, suffix := range arbitraryCodeNameSuffixes {
+		if strings.HasSuffix(nameLower, suffix) || strings.Contains(nameLower, suffix) {
+			return emitArbitraryCodeFinding(), nil
+		}
 	}
+
+	// 3. Regex patterns for natural language variants in description or name.
+	combined := nameLower + " " + descLower
+	for _, re := range arbitraryCodePatterns {
+		if re.MatchString(combined) {
+			return emitArbitraryCodeFinding(), nil
+		}
+	}
+
 	return nil, nil
 }
 
