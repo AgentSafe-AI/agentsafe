@@ -342,7 +342,7 @@ func buildRiskLine(policies []model.GatewayPolicy) string {
 // printScanPtree writes a tree view of the scan process to w (stderr) during verbose scan.
 func printScanPtree(w *os.File, tool model.UnifiedTool, score model.RiskScore, policy model.GatewayPolicy) {
 	const tree, branch, last = "│  ", "├─ ", "└─ "
-	fmt.Fprintf(w, "\n┌─ %s\n", tool.Name)
+	_, _ = fmt.Fprintf(w, "\n┌─ %s\n", tool.Name)
 	var lines []string
 	if len(tool.Permissions) > 0 {
 		lines = append(lines, fmt.Sprintf("Permissions: %v", tool.Permissions))
@@ -360,9 +360,9 @@ func printScanPtree(w *os.File, tool model.UnifiedTool, score model.RiskScore, p
 		if i == len(lines)-1 {
 			sep = last
 		}
-		fmt.Fprintf(w, "%s%s%s\n", tree, sep, ln)
+		_, _ = fmt.Fprintf(w, "%s%s%s\n", tree, sep, ln)
 	}
-	fmt.Fprintf(w, "└─\n")
+	_, _ = fmt.Fprintf(w, "└─\n")
 }
 
 func checkFailOn(failOn string, summary ScanSummary) error {

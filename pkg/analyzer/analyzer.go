@@ -42,7 +42,7 @@ func NewScanner() *Scanner {
 			NewScopeChecker(),               // AS-003
 			NewSupplyChainChecker(),         // AS-004
 			NewPrivilegeEscalationChecker(), // AS-005
-			NewArbitraryCodeChecker(),      // AS-006
+			NewArbitraryCodeChecker(),       // AS-006
 			NewSecretHandlingChecker(),      // AS-010
 			NewDoSResilienceChecker(),       // AS-011
 		},

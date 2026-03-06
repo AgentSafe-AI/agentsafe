@@ -91,7 +91,7 @@ var permissionRules = []struct {
 	{
 		model.PermissionExec,
 		permissionRule{
-			propKeys:     []string{"command", "cmd", "shell", "script"},
+			propKeys: []string{"command", "cmd", "shell", "script"},
 			descKeywords: []string{"execute", "run command", "shell", "subprocess", "exec", "terminal",
 				"evaluate_script", "execute javascript", "eval", "run script", "execute script", "browser injection"},
 			nameKeywords: []string{"evaluate_script", "execute_javascript", "evaluatescript", "executejavascript",

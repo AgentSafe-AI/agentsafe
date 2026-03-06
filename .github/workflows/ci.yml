@@ -112,9 +112,9 @@ jobs:
       - name: Build MCP Server
         run: go build -v ./cmd/mcpserver/...
 
-  # ── 4. Self-scan (AgentSentry scans itself) ─────────────────────────────────
+  # ── 4. ToolTrust Scanner scans itself (self-scan) ────────────────────────
   self-scan:
-    name: AgentSentry Self-Scan
+    name: ToolTrust Self-Scan
     runs-on: ubuntu-latest
     needs: [build]
 
@@ -135,7 +135,7 @@ jobs:
           /tmp/tooltrust-scanner scan \
             --protocol mcp \
             --input testdata/tools.json \
-            --output /tmp/scan_report.json
+            --output json --file /tmp/scan_report.json
           cat /tmp/scan_report.json
 
       - name: Validate --fail-on flag (must not BLOCK safe tools)
@@ -175,7 +175,7 @@ jobs:
           go install github.com/AgentSafe-AI/tooltrust-scanner/cmd/tooltrust-scanner@main
           BIN="$(go env GOPATH)/bin/tooltrust-scanner"
           $BIN version
-          $BIN scan --protocol mcp --input testdata/tools.json -o /tmp/go-install-scan.json
+          $BIN scan --protocol mcp --input testdata/tools.json --output text
           echo "✓ go install works"
 
       - name: Verify pre-built binary download (requires v0.1.3+)
@@ -187,7 +187,7 @@ jobs:
           if curl -sfSL -o /tmp/tooltrust-scanner_bin "$URL"; then
             chmod +x /tmp/tooltrust-scanner_bin
             /tmp/tooltrust-scanner_bin version
-            /tmp/tooltrust-scanner_bin scan --protocol mcp --input testdata/tools.json -o /dev/null
+            /tmp/tooltrust-scanner_bin scan --protocol mcp --input testdata/tools.json --output text
             echo "✓ pre-built binary works"
           else
             echo "::notice::Pre-built binary not found (expected until v0.1.3 release)"
@@ -210,7 +210,7 @@ jobs:
           cp "$GITHUB_WORKSPACE/Formula/tooltrust-scanner.rb" "$TAP_DIR/Formula/"
           brew install AgentSafe-AI/tooltrust-scanner/tooltrust-scanner
           tooltrust-scanner version
-          tooltrust-scanner scan --protocol mcp --input testdata/tools.json -o /dev/null
+          tooltrust-scanner scan --protocol mcp --input testdata/tools.json --output text
           echo "✓ Homebrew install works"
 
       - name: Uninstall
