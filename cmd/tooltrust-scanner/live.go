@@ -20,14 +20,19 @@ func scanLiveServer(ctx context.Context, serverCmd string) ([]model.UnifiedTool,
 		return nil, fmt.Errorf("empty server command")
 	}
 
-	pterm.Printf("🔌 Connecting to live MCP server: %s...\n", serverCmd)
+	spinner, err := pterm.DefaultSpinner.Start("🔌 Connecting to live MCP server: " + serverCmd)
+	if err != nil {
+		return nil, fmt.Errorf("failed to start spinner: %w", err)
+	}
 
 	c, err := client.NewStdioMCPClient(args[0], nil, args[1:]...)
 	if err != nil {
+		spinner.Fail("Failed to create stdio client")
 		return nil, fmt.Errorf("failed to create stdio client: %w", err)
 	}
 
 	if startErr := c.Start(ctx); startErr != nil {
+		spinner.Fail("Failed to start client")
 		return nil, fmt.Errorf("failed to start client: %w", startErr)
 	}
 	defer c.Close() //nolint:errcheck // closing client on exit, error is acceptable
@@ -41,14 +46,18 @@ func scanLiveServer(ctx context.Context, serverCmd string) ([]model.UnifiedTool,
 
 	_, err = c.Initialize(ctx, initReq)
 	if err != nil {
+		spinner.Fail("Initialization failed")
 		return nil, fmt.Errorf("initialization failed: %w", err)
 	}
 
 	listReq := mcpgo.ListToolsRequest{}
 	resp, err := c.ListTools(ctx, listReq)
 	if err != nil {
+		spinner.Fail("Failed to fetch tools")
 		return nil, fmt.Errorf("tools/list map failed: %w", err)
 	}
+
+	spinner.Success("Connected and tools fetched!")
 
 	// We serialize the response back to JSON so we can use our existing adapter,
 	// which also runs the inference rules for permissions.
