@@ -75,6 +75,7 @@ var severityWeight = map[model.Severity]int{
 func newScanCmd() *cobra.Command {
 	var (
 		inputFile  string
+		serverCmd  string
 		protocol   string
 		output     string
 		outputFile string
@@ -94,6 +95,7 @@ func newScanCmd() *cobra.Command {
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			return runScan(cmd.Context(), scanOpts{
 				inputFile:  inputFile,
+				serverCmd:  serverCmd,
 				protocol:   protocol,
 				output:     output,
 				outputFile: outputFile,
@@ -104,22 +106,22 @@ func newScanCmd() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVarP(&inputFile, "input", "i", "", "path to tool definition file (required)")
+	cmd.Flags().StringVarP(&inputFile, "input", "i", "", "path to tool definition file")
+	cmd.Flags().StringVarP(&serverCmd, "server", "s", "", "live MCP server to scan (e.g. 'npx @modelcontextprotocol/server-filesystem /tmp')")
 	cmd.Flags().StringVarP(&protocol, "protocol", "p", "mcp", "protocol format: mcp | openai | skills")
 	cmd.Flags().StringVarP(&output, "output", "o", "text", "output format: text (default) | json")
 	cmd.Flags().StringVar(&outputFile, "file", "", "write output to file instead of stdout")
 	cmd.Flags().StringVar(&failOn, "fail-on", "", "exit non-zero if any tool reaches this action: allow | approval | block")
 	cmd.Flags().StringVar(&dbPath, "db", "", "persist scan results to SQLite database at this path")
 	cmd.Flags().BoolVarP(&verbose, "verbose", "v", false, "print per-tool scan process tree to stderr during scan")
-	if err := cmd.MarkFlagRequired("input"); err != nil {
-		panic(err)
-	}
+	// Mutual exclusivity checked in runScan
 
 	return cmd
 }
 
 type scanOpts struct {
 	inputFile  string
+	serverCmd  string
 	protocol   string
 	output     string
 	outputFile string
@@ -136,22 +138,37 @@ func runScan(ctx context.Context, opts scanOpts) error {
 		return fmt.Errorf("invalid --output value %q (use: text | json)", opts.output)
 	}
 
-	data, err := os.ReadFile(opts.inputFile)
-	if err != nil {
-		return fmt.Errorf("cannot read input file: %w", err)
+	if (opts.inputFile == "") == (opts.serverCmd == "") {
+		return fmt.Errorf("exactly one of --input or --server must be provided")
 	}
 
 	var tools []model.UnifiedTool
+	var err error
 
-	switch opts.protocol {
-	case "mcp":
-		a := mcp.NewAdapter()
-		tools, err = a.Parse(ctx, data)
-		if err != nil {
-			return fmt.Errorf("parse error: %w", err)
+	if opts.serverCmd != "" {
+		if opts.protocol != "mcp" {
+			return fmt.Errorf("--server only supports the 'mcp' protocol")
 		}
-	default:
-		return fmt.Errorf("unsupported protocol %q (supported: mcp)", opts.protocol)
+		tools, err = scanLiveServer(ctx, opts.serverCmd)
+		if err != nil {
+			return fmt.Errorf("live server scan failed: %w", err)
+		}
+	} else {
+		data, err := os.ReadFile(opts.inputFile)
+		if err != nil {
+			return fmt.Errorf("cannot read input file: %w", err)
+		}
+
+		switch opts.protocol {
+		case "mcp":
+			a := mcp.NewAdapter()
+			tools, err = a.Parse(ctx, data)
+			if err != nil {
+				return fmt.Errorf("parse error: %w", err)
+			}
+		default:
+			return fmt.Errorf("unsupported protocol %q (supported: mcp)", opts.protocol)
+		}
 	}
 
 	scanner := analyzer.NewScanner()
