@@ -97,7 +97,7 @@ func handleScan(ctx context.Context, req mcplib.CallToolRequest) (*mcplib.CallTo
 		return mcplib.NewToolResultError(fmt.Sprintf("failed to parse tool definitions: %v", parseErr)), nil
 	}
 
-	scanner := analyzer.NewScanner()
+	scanner := analyzer.NewScanner(false)
 	var policies []model.GatewayPolicy
 	summary := ScanSummary{Total: len(tools)}
 
