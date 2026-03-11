@@ -8,21 +8,38 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
+	"sync"
 	"time"
 
 	"github.com/pterm/pterm"
+	"github.com/sugarme/tokenizer"
+	"github.com/sugarme/tokenizer/pretrained"
 	"github.com/yalue/onnxruntime_go"
 )
 
-// Dummy URLs for Phase 1.
+// Real ONNX and tokenizer URLs for Phase 3 (all-MiniLM-L6-v2 quantized).
 const (
-	modelURL  = "https://raw.githubusercontent.com/AgentSafe-AI/tooltrust-scanner/main/README.md" // replace when model is ready
-	corpusURL = "https://raw.githubusercontent.com/AgentSafe-AI/tooltrust-scanner/main/LICENSE"   // replace when corpus is ready
+	modelURL     = "https://huggingface.co/Xenova/all-MiniLM-L6-v2/resolve/main/onnx/model_quantized.onnx"
+	tokenizerURL = "https://huggingface.co/Xenova/all-MiniLM-L6-v2/resolve/main/tokenizer.json"
 )
 
 var (
 	// IsInitialized is set to true if ONNX and the models are successfully loaded.
 	IsInitialized bool
+
+	// Global Inference Resources.
+	session         *onnxruntime_go.AdvancedSession
+	onnxTokenizer   *tokenizer.Tokenizer
+	InInputIds      *onnxruntime_go.Tensor[int64]
+	InAttentionMask *onnxruntime_go.Tensor[int64]
+	InTokenTypeIds  *onnxruntime_go.Tensor[int64]
+	OutHiddenState  *onnxruntime_go.Tensor[float32]
+
+	// InferenceMutex prevents concurrent access to the shared tensors.
+	InferenceMutex sync.Mutex
+
+	// Precomputed embeddings for high-risk inputs.
+	PrecomputedAttackEmbeddings [][]float32
 )
 
 // Init checks for the ONNX shared library, downloads ML models if missing, and initializes the ONNX runtime.
@@ -43,13 +60,62 @@ func Init(ctx context.Context) error {
 	if err := onnxruntime_go.InitializeEnvironment(); err != nil {
 		return fmt.Errorf("failed to initialize ONNX environment: %w", err)
 	}
+	// Note: We don't defer DestroyEnvironment because we want to keep it alive during the CLI run.
 
-	if err := EnsureModels(ctx); err != nil {
+	modelPath, tokenizerPath, err := EnsureModels(ctx)
+	if err != nil {
 		return err
 	}
 
+	// Load Tokenizer
+	tk, err := pretrained.FromFile(tokenizerPath)
+	if err != nil {
+		return fmt.Errorf("failed to load tokenizer: %w", err)
+	}
+	onnxTokenizer = tk
+
+	// Allocate global reusable tensors.
+	// miniLM outputs shape [1, seq_length, 384]
+	shape := onnxruntime_go.NewShape(1, 128)
+	InInputIds, err = onnxruntime_go.NewEmptyTensor[int64](shape)
+	if err != nil {
+		return fmt.Errorf("failed to allocate input_ids tensor: %w", err)
+	}
+
+	InAttentionMask, err = onnxruntime_go.NewEmptyTensor[int64](shape)
+	if err != nil {
+		return fmt.Errorf("failed to allocate attention_mask tensor: %w", err)
+	}
+
+	InTokenTypeIds, err = onnxruntime_go.NewEmptyTensor[int64](shape)
+	if err != nil {
+		return fmt.Errorf("failed to allocate token_type_ids tensor: %w", err)
+	}
+
+	outShape := onnxruntime_go.NewShape(1, 128, 384)
+	OutHiddenState, err = onnxruntime_go.NewEmptyTensor[float32](outShape)
+	if err != nil {
+		return fmt.Errorf("failed to allocate last_hidden_state tensor: %w", err)
+	}
+
+	inNames := []string{"input_ids", "attention_mask", "token_type_ids"}
+	outNames := []string{"last_hidden_state"}
+	ins := []onnxruntime_go.Value{InInputIds, InAttentionMask, InTokenTypeIds}
+	outs := []onnxruntime_go.Value{OutHiddenState}
+
+	s, err := onnxruntime_go.NewAdvancedSession(modelPath, inNames, outNames, ins, outs, nil)
+	if err != nil {
+		return fmt.Errorf("failed to create ONNX Advanced Session: %w", err)
+	}
+	session = s
+
+	// Precompute Attack Corpus
+	if err := PrecomputeAttackCorpus(); err != nil {
+		return fmt.Errorf("failed to precompute attack corpus embeddings: %w", err)
+	}
+
 	IsInitialized = true
-	pterm.Info.Println("🧪 ONNX ML Engine active (Semantic Tokenizer is currently in Alpha preview)")
+	pterm.Info.Println("🧪 ONNX ML Engine active (Semantic Inference via all-MiniLM-L6-v2)")
 	return nil
 }
 
@@ -78,48 +144,47 @@ func getONNXSharedLibraryPath() string {
 	}
 }
 
-// EnsureModels downloads the required ONNX and corpus files if they don't exist.
-// If they do not exist, it securely downloads them while displaying a pterm spinner.
-func EnsureModels(ctx context.Context) error {
+// EnsureModels downloads the required ONNX and tokenizer files if they don't exist.
+// Returns the absolute paths to the model and tokenizer, or an error.
+func EnsureModels(ctx context.Context) (modelPath, tokenizerPath string, err error) {
 	home, err := os.UserHomeDir()
 	if err != nil {
-		return fmt.Errorf("failed to get home dir: %w", err)
+		return "", "", fmt.Errorf("unable to determine user home directory: %w", err)
 	}
 
 	modelDir := filepath.Join(home, ".tooltrust", "models")
 	if mkdirErr := os.MkdirAll(modelDir, 0o755); mkdirErr != nil {
-		return fmt.Errorf("failed to create models directory %s: %w", modelDir, mkdirErr)
+		return "", "", fmt.Errorf("failed to create models directory %s: %w", modelDir, mkdirErr)
 	}
 
-	modelPath := filepath.Join(modelDir, "model.onnx")
-	corpusPath := filepath.Join(modelDir, "corpus.json")
+	modelPath = filepath.Join(modelDir, "model.onnx")
+	tokenizerPath = filepath.Join(modelDir, "tokenizer.json")
 
 	// If already downloaded, fast-path out safely.
-	if fileExists(modelPath) && fileExists(corpusPath) {
-		return nil
+	if fileExists(modelPath) && fileExists(tokenizerPath) {
+		return modelPath, tokenizerPath, nil
 	}
 
-	// Wait up to 2 minutes for downloads.
 	dlCtx, cancel := context.WithTimeout(ctx, 2*time.Minute)
 	defer cancel()
 
-	spinner, err := pterm.DefaultSpinner.Start("Downloading deep-scan ML models (22MB)...")
+	spinner, err := pterm.DefaultSpinner.Start("Downloading deep-scan ML models (90MB)...")
 	if err != nil {
-		return fmt.Errorf("failed to start pterm spinner: %w", err)
+		return "", "", fmt.Errorf("failed to start pterm spinner: %w", err)
 	}
 
 	if err := downloadFile(dlCtx, modelURL, modelPath); err != nil {
-		spinner.Fail("Failed to download model")
-		return fmt.Errorf("model download failed: %w", err)
+		spinner.Fail("Failed to download ONNX model")
+		return "", "", fmt.Errorf("failed to download model: %w", err)
 	}
 
-	if err := downloadFile(dlCtx, corpusURL, corpusPath); err != nil {
-		spinner.Fail("Failed to download corpus")
-		return fmt.Errorf("corpus download failed: %w", err)
+	if err := downloadFile(dlCtx, tokenizerURL, tokenizerPath); err != nil {
+		spinner.Fail("Failed to download tokenizer")
+		return "", "", fmt.Errorf("failed to download tokenizer: %w", err)
 	}
 
 	spinner.Success("Deep-scan models loaded!")
-	return nil
+	return modelPath, tokenizerPath, nil
 }
 
 func fileExists(path string) bool {
