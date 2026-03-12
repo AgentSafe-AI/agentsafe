@@ -21,7 +21,12 @@ func writeSarifOutput(opts scanOpts, report ScanReport) error {
 
 	run.AddRule("AS-001").WithShortDescription(sarif.NewMultiformatMessageString("Prompt Injection")).WithHelpURI("https://github.com/AgentSafe-AI/tooltrust-scanner")
 	run.AddRule("AS-002").WithShortDescription(sarif.NewMultiformatMessageString("Dangerous Permission")).WithHelpURI("https://github.com/AgentSafe-AI/tooltrust-scanner")
+	run.AddRule("AS-003").WithShortDescription(sarif.NewMultiformatMessageString("Scope Mismatch")).WithHelpURI("https://github.com/AgentSafe-AI/tooltrust-scanner")
+	run.AddRule("AS-004").WithShortDescription(sarif.NewMultiformatMessageString("Supply Chain Risk")).WithHelpURI("https://github.com/AgentSafe-AI/tooltrust-scanner")
+	run.AddRule("AS-005").WithShortDescription(sarif.NewMultiformatMessageString("Privilege Escalation")).WithHelpURI("https://github.com/AgentSafe-AI/tooltrust-scanner")
 	run.AddRule("AS-006").WithShortDescription(sarif.NewMultiformatMessageString("Arbitrary Code Execution")).WithHelpURI("https://github.com/AgentSafe-AI/tooltrust-scanner")
+	run.AddRule("AS-010").WithShortDescription(sarif.NewMultiformatMessageString("Secret Handling")).WithHelpURI("https://github.com/AgentSafe-AI/tooltrust-scanner")
+	run.AddRule("AS-011").WithShortDescription(sarif.NewMultiformatMessageString("Missing Rate Limit")).WithHelpURI("https://github.com/AgentSafe-AI/tooltrust-scanner")
 
 	sarifReport.AddRun(run)
 

@@ -25,7 +25,7 @@ e2e: scan-test
 
 scan-test: build
 	@echo "🔎 Running E2E Scanner Test..."
-	# 用剛編譯好的 binary，直接跑一次我們最自豪的 Live Server 掃描
+	# Run E2E scan with the newly built binary
 	./tooltrust-scanner scan --server "npx -y @modelcontextprotocol/server-memory"
 
 clean:

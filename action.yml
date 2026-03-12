@@ -17,6 +17,11 @@ inputs:
     required: false
     default: 'approval'
 
+  deep-scan:
+    description: 'Enable AI-based semantic analysis for deep prompt injection detection (~22MB model).'
+    required: false
+    default: 'false'
+
 outputs:
   grade:
     description: "The overall scan grade (A, B, C, D, F)"
@@ -56,10 +61,15 @@ runs:
         # Turn off exit immediately so we can parse the JSON even if the scan fails
         set +e
         
+        DEEP_SCAN_FLAG=""
+        if [ "${{ inputs.deep-scan }}" = "true" ]; then
+          DEEP_SCAN_FLAG="--deep-scan"
+        fi
+
         if [ -n "${{ inputs.server }}" ]; then
-          tooltrust scan --server "${{ inputs.server }}" --fail-on "${{ inputs.fail-on }}" --output json --file "$REPORT_FILE" >/dev/null
+          tooltrust scan --server "${{ inputs.server }}" --fail-on "${{ inputs.fail-on }}" $DEEP_SCAN_FLAG --output json --file "$REPORT_FILE" >/dev/null
         elif [ -n "${{ inputs.input }}" ]; then
-          tooltrust scan --input "${{ inputs.input }}" --fail-on "${{ inputs.fail-on }}" --output json --file "$REPORT_FILE" >/dev/null
+          tooltrust scan --input "${{ inputs.input }}" --fail-on "${{ inputs.fail-on }}" $DEEP_SCAN_FLAG --output json --file "$REPORT_FILE" >/dev/null
         else
           echo "::error::Either 'server' or 'input' must be provided."
           exit 1
