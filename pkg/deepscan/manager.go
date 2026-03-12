@@ -168,7 +168,7 @@ func EnsureModels(ctx context.Context) (modelPath, tokenizerPath string, err err
 	dlCtx, cancel := context.WithTimeout(ctx, 2*time.Minute)
 	defer cancel()
 
-	spinner, err := pterm.DefaultSpinner.Start("Downloading deep-scan ML models (90MB)...")
+	spinner, err := pterm.DefaultSpinner.Start("Downloading deep-scan ML models (~22MB quantized ONNX model)...")
 	if err != nil {
 		return "", "", fmt.Errorf("failed to start pterm spinner: %w", err)
 	}

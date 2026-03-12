@@ -25,6 +25,7 @@ var injectionPatterns = []*regexp.Regexp{
 	regexp.MustCompile(`(?i)jailbreak`),
 	// Data Exfiltration
 	regexp.MustCompile(`(?i)send.*(history|data|conversation).*to.*(http|url)`),
+	regexp.MustCompile(`(?i)(?:(?:transmit|send|forward|post|upload|pipe).*(?:data|info|content)|(?:data|info|content).*(?:transmit|send|forward|post|upload|pipe)).*to\b`),
 }
 
 // PoisoningChecker inspects a tool's description for prompt injection signals.

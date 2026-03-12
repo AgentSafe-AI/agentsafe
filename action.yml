@@ -37,8 +37,10 @@ runs:
         OS="$(uname -s | tr '[:upper:]' '[:lower:]')"
         ARCH="$(uname -m | sed -e 's/x86_64/amd64/' -e 's/aarch64/arm64/')"
         URL="https://github.com/AgentSafe-AI/tooltrust-scanner/releases/latest/download/tooltrust-scanner_${OS}_${ARCH}"
-        curl -fsSL "$URL" -o /usr/local/bin/tooltrust
-        chmod +x /usr/local/bin/tooltrust
+        mkdir -p "$GITHUB_WORKSPACE/.tooltrust/bin"
+        curl -fsSL "$URL" -o "$GITHUB_WORKSPACE/.tooltrust/bin/tooltrust"
+        chmod +x "$GITHUB_WORKSPACE/.tooltrust/bin/tooltrust"
+        echo "$GITHUB_WORKSPACE/.tooltrust/bin" >> $GITHUB_PATH
 
     - name: Run ToolTrust Scanner
       id: scan

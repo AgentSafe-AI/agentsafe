@@ -121,7 +121,7 @@ func newScanCmd() *cobra.Command {
 	cmd.Flags().StringVar(&failOn, "fail-on", "", "exit non-zero if any tool reaches this action: allow | approval | block")
 	cmd.Flags().StringVar(&dbPath, "db", "", "persist scan results to SQLite database at this path")
 	cmd.Flags().BoolVarP(&verbose, "verbose", "v", false, "print per-tool scan process tree to stderr during scan")
-	cmd.Flags().BoolVar(&deepScan, "deep-scan", false, "Enable AI-based semantic analysis for deep prompt injection detection (downloads a ~22MB local model on first run)")
+	cmd.Flags().BoolVar(&deepScan, "deep-scan", false, "Enable AI-based semantic analysis for deep prompt injection detection (downloads a ~22MB quantized ONNX model on first run)")
 	cmd.Flags().StringVar(&rulesDir, "rules-dir", "", "path to directory containing custom YAML rules")
 	// Mutual exclusivity checked in runScan
 
