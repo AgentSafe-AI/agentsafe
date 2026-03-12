@@ -18,6 +18,11 @@ func writeSarifOutput(opts scanOpts, report ScanReport) error {
 	}
 
 	run := sarif.NewRunWithInformationURI("ToolTrust Scanner", "https://github.com/AgentSafe-AI/tooltrust-scanner")
+
+	run.AddRule("AS-001").WithShortDescription(sarif.NewMultiformatMessageString("Prompt Injection")).WithHelpURI("https://github.com/AgentSafe-AI/tooltrust-scanner")
+	run.AddRule("AS-002").WithShortDescription(sarif.NewMultiformatMessageString("Dangerous Permission")).WithHelpURI("https://github.com/AgentSafe-AI/tooltrust-scanner")
+	run.AddRule("AS-006").WithShortDescription(sarif.NewMultiformatMessageString("Arbitrary Code Execution")).WithHelpURI("https://github.com/AgentSafe-AI/tooltrust-scanner")
+
 	sarifReport.AddRun(run)
 
 	for _, policy := range report.Policies {

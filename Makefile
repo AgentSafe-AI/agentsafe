@@ -1,7 +1,7 @@
-.PHONY: check fmt lint test build scan
+.PHONY: check fmt lint test build scan e2e clean
 
-check: fmt lint test build scan
-	@echo "✅ All CI/CD checks & E2E Scans passed! Ready to commit."
+check: fmt lint test build
+	@echo "✅ All CI/CD checks passed! Ready to commit."
 
 fmt:
 	@echo "🧹 Formatting code..."
@@ -21,7 +21,13 @@ build:
 	@echo "🔨 Verifying build..."
 	go build -o tooltrust-scanner ./cmd/tooltrust-scanner
 
-scan:
+e2e: scan-test
+
+scan-test: build
 	@echo "🔎 Running E2E Scanner Test..."
 	# 用剛編譯好的 binary，直接跑一次我們最自豪的 Live Server 掃描
 	./tooltrust-scanner scan --server "npx -y @modelcontextprotocol/server-memory"
+
+clean:
+	@echo "🧹 Cleaning up..."
+	rm -f tooltrust-scanner
