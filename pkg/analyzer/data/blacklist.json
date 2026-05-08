@@ -1,19 +1,135 @@
 [
   {
+    "id": "CVE-2026-44641",
+    "component": "apm-cli",
+    "ecosystem": "PyPI",
+    "affected_versions": [
+      "0.1.0",
+      "0.1.1",
+      "0.1.2",
+      "0.1.4",
+      "0.1.5",
+      "0.1.6",
+      "0.1.7",
+      "0.2.0",
+      "0.3.0",
+      "0.4.0",
+      "0.4.1",
+      "0.4.2",
+      "0.4.3",
+      "0.5.0",
+      "0.5.1",
+      "0.5.2",
+      "0.5.3",
+      "0.5.4",
+      "0.5.5",
+      "0.5.6",
+      "0.5.7",
+      "0.5.8",
+      "0.5.9",
+      "0.6.0",
+      "0.6.1",
+      "0.6.2",
+      "0.6.3",
+      "0.7.0",
+      "0.7.1",
+      "0.7.2",
+      "0.7.3",
+      "0.7.4",
+      "0.7.5",
+      "0.7.6",
+      "0.7.7",
+      "0.7.8",
+      "0.7.9",
+      "0.8.0",
+      "0.8.1",
+      "0.8.10",
+      "0.8.11",
+      "0.8.2",
+      "0.8.3",
+      "0.8.4",
+      "0.8.5",
+      "0.8.6",
+      "0.8.7",
+      "0.8.8",
+      "0.8.9"
+    ],
+    "action": "BLOCK",
+    "severity": "HIGH",
+    "reason": "Microsoft APM CLI's plugin.json component paths escape plugin root and copy arbitrary host files during install",
+    "link": "https://osv.dev/vulnerability/GHSA-xhrw-5qxx-jpwr"
+  },
+  {
+    "id": "CVE-2026-33017",
+    "component": "langflow",
+    "ecosystem": "PyPI",
+    "affected_versions": [
+      "< 1.9.0"
+    ],
+    "action": "BLOCK",
+    "severity": "CRITICAL",
+    "reason": "Unauthenticated RCE (CVSS 9.8): POST /api/v1/build_public_tmp/{flow_id}/flow accepts attacker-controlled flow data and passes arbitrary Python code directly to exec() with no sandboxing. Fixed in 1.9.0.",
+    "link": "https://github.com/advisories/GHSA-rvqx-wpfh-mfx7"
+  },
+  {
     "id": "SNYK-PYTHON-LITELLM-15762713",
     "component": "litellm",
     "ecosystem": "PyPI",
-    "affected_versions": ["1.82.7", "1.82.8"],
+    "affected_versions": [
+      "1.82.7",
+      "1.82.8"
+    ],
     "action": "BLOCK",
     "severity": "CRITICAL",
     "reason": "TeamPCP supply chain attack: malicious .pth file steals SSH keys, AWS/K8s credentials and .env files on every Python startup, then establishes systemd persistence and attempts Kubernetes lateral movement.",
     "link": "https://security.snyk.io/vuln/SNYK-PYTHON-LITELLM-15762713"
   },
   {
+    "id": "GHSA-v7qw-hx66-4w9x",
+    "component": "netbox-data-flows",
+    "ecosystem": "PyPI",
+    "affected_versions": [
+      "0.5.0",
+      "0.5.2",
+      "0.6.0",
+      "0.7.0",
+      "0.7.1",
+      "0.7.2",
+      "0.7.3",
+      "0.7.4",
+      "0.8.0",
+      "0.8.2",
+      "0.8.3",
+      "0.9.0",
+      "1.0.0",
+      "1.0.1",
+      "1.0.3",
+      "1.0.4",
+      "1.0.5",
+      "1.0.6",
+      "1.1.0",
+      "1.1.1",
+      "1.2.0",
+      "1.2.1",
+      "1.3.0",
+      "1.4.0",
+      "1.4.1",
+      "1.5.0"
+    ],
+    "action": "BLOCK",
+    "severity": "HIGH",
+    "reason": "netbox-data-flows has stored XSS in ObjectAlias names rendered inside DataFlow tables",
+    "link": "https://osv.dev/vulnerability/GHSA-v7qw-hx66-4w9x"
+  },
+  {
     "id": "GHSA-69fq-xp46-6x23",
     "component": "trivy",
     "ecosystem": "binary",
-    "affected_versions": ["v0.69.4", "v0.69.5", "v0.69.6"],
+    "affected_versions": [
+      "v0.69.4",
+      "v0.69.5",
+      "v0.69.6"
+    ],
     "action": "BLOCK",
     "severity": "CRITICAL",
     "reason": "TeamPCP compromised CI/CD pipeline and pushed malicious binaries that exfiltrate runner memory and environment secrets.",
@@ -21,52 +137,63 @@
   },
   {
     "id": "GHSA-69fq-xp46-6x23",
-    "component": "trivy-action",
-    "ecosystem": "github-actions",
-    "affected_versions": ["< v0.35.0"],
-    "action": "WARN",
-    "severity": "HIGH",
-    "reason": "Vulnerable tags were force-pushed to point to malicious commits during the March 2026 TeamPCP exposure window. Upgrade to v0.35.0+ and pin by SHA.",
-    "link": "https://github.com/aquasecurity/trivy-action/security/advisories"
-  },
-  {
-    "id": "GHSA-69fq-xp46-6x23",
     "component": "setup-trivy",
     "ecosystem": "github-actions",
-    "affected_versions": ["< v0.2.6"],
+    "affected_versions": [
+      "< v0.2.6"
+    ],
     "action": "WARN",
     "severity": "HIGH",
     "reason": "Versions prior to v0.2.6 were at elevated risk during the March 2026 TeamPCP exposure window (~4 hours). Upgrade to v0.2.6+ (SHA: 3fb12ec) or pin by digest.",
     "link": "https://github.com/aquasecurity/trivy/security/advisories/GHSA-69fq-xp46-6x23"
   },
   {
-    "id": "CVE-2026-33017",
-    "component": "langflow",
-    "ecosystem": "PyPI",
-    "affected_versions": ["< 1.9.0"],
+    "id": "GHSA-69fq-xp46-6x23",
+    "component": "trivy-action",
+    "ecosystem": "github-actions",
+    "affected_versions": [
+      "< v0.35.0"
+    ],
+    "action": "WARN",
+    "severity": "HIGH",
+    "reason": "Vulnerable tags were force-pushed to point to malicious commits during the March 2026 TeamPCP exposure window. Upgrade to v0.35.0+ and pin by SHA.",
+    "link": "https://github.com/aquasecurity/trivy-action/security/advisories"
+  },
+  {
+    "id": "BITWARDEN-CLI-COMPROMISE-2026-04-22",
+    "component": "@bitwarden/cli",
+    "ecosystem": "npm",
+    "affected_versions": [
+      "2026.4.0"
+    ],
     "action": "BLOCK",
     "severity": "CRITICAL",
-    "reason": "Unauthenticated RCE (CVSS 9.8): POST /api/v1/build_public_tmp/{flow_id}/flow accepts attacker-controlled flow data and passes arbitrary Python code directly to exec() with no sandboxing. Fixed in 1.9.0.",
-    "link": "https://github.com/advisories/GHSA-rvqx-wpfh-mfx7"
+    "reason": "Confirmed npm supply-chain compromise: attackers hijacked Bitwarden's GitHub Actions, stole release secrets, and pushed a tampered @bitwarden/cli@2026.4.0 build to npm containing malicious code. Remove immediately and rotate any credentials that passed through the CLI.",
+    "link": "https://thehackernews.com/2026/04/bitwarden-cli-supply-chain-attack.html"
   },
   {
     "id": "AXIOS-NPM-COMPROMISE-2026-03-31",
     "component": "axios",
     "ecosystem": "npm",
-    "affected_versions": ["1.14.1", "0.30.4"],
+    "affected_versions": [
+      "1.14.1",
+      "0.30.4"
+    ],
     "action": "BLOCK",
     "severity": "CRITICAL",
     "reason": "Confirmed npm supply-chain compromise: attacker reportedly hijacked the maintainer npm account and published malicious axios builds that introduced the plain-crypto-js dependency outside the normal GitHub Actions release flow.",
     "link": "https://github.com/axios/axios"
   },
   {
-    "id": "BITWARDEN-CLI-COMPROMISE-2026-04-22",
-    "component": "@bitwarden/cli",
+    "id": "GHSA-54pg-9963-v8vg",
+    "component": "intercom-client",
     "ecosystem": "npm",
-    "affected_versions": ["2026.4.0"],
+    "affected_versions": [
+      "7.0.4"
+    ],
     "action": "BLOCK",
     "severity": "CRITICAL",
-    "reason": "Confirmed npm supply-chain compromise: attackers hijacked Bitwarden's GitHub Actions, stole release secrets, and pushed a tampered @bitwarden/cli@2026.4.0 build to npm containing malicious code. Remove immediately and rotate any credentials that passed through the CLI.",
-    "link": "https://thehackernews.com/2026/04/bitwarden-cli-supply-chain-attack.html"
+    "reason": "Compromised version of intercom-client published to npm",
+    "link": "https://osv.dev/vulnerability/GHSA-54pg-9963-v8vg"
   }
 ]
