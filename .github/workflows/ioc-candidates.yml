@@ -24,7 +24,7 @@ permissions:
 
 jobs:
   generate-candidates:
-    name: Generate OSV blacklist candidates
+    name: Generate OSV compromise candidates
     runs-on: ubuntu-latest
 
     steps:
@@ -69,17 +69,18 @@ jobs:
         with:
           token: ${{ secrets.TOOLTRUST_BOT_TOKEN || github.token }}
           branch: ioc-candidates/${{ github.run_id }}
-          title: "ioc: ${{ steps.candidate_count.outputs.count }} new blacklist candidate(s)"
-          commit-message: "data(blacklist): auto-append ${{ steps.candidate_count.outputs.count }} OSV candidate(s)"
+          title: "ioc: ${{ steps.candidate_count.outputs.count }} new compromise candidate(s)"
+          commit-message: "data(blacklist): auto-append ${{ steps.candidate_count.outputs.count }} OSV compromise candidate(s)"
           body: |
-            Automated IOC blacklist candidates generated from OSV ecosystem feeds for the last 24 hours.
+            Automated IOC compromise candidates generated from OSV ecosystem feeds for the last 24 hours.
 
             Review each entry carefully:
+            - Does this read like a real supply-chain compromise or malicious publish, rather than an ordinary CVE?
             - Is the version pinning exact and narrow enough?
             - Is `BLOCK` the right action, or should this be downgraded to `WARN`?
             - Is the reason clear enough for someone triaging a finding?
 
-            Close this PR if any candidate looks incorrect. The workflow will retry on the next scheduled run.
+            Close this PR if any candidate looks like a normal vulnerability that should stay in AS-004 / OSV instead of the manual blacklist.
           labels: |
             ioc
             automated

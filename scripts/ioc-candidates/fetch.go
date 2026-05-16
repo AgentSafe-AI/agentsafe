@@ -284,6 +284,9 @@ func buildCandidates(vulns []osvVulnerability, ecosystem string, existing map[st
 		if !ok || severityRank(severity) < severityRank(minSeverity) {
 			continue
 		}
+		if !looksLikeBlacklistCandidate(*vuln) {
+			continue
+		}
 
 		for _, affected := range vuln.Affected {
 			if !strings.EqualFold(strings.TrimSpace(affected.Package.Ecosystem), ecosystem) {
@@ -329,6 +332,45 @@ func buildCandidates(vulns []osvVulnerability, ecosystem string, existing map[st
 		}
 	}
 	return out
+}
+
+func looksLikeBlacklistCandidate(vuln osvVulnerability) bool {
+	text := strings.ToLower(strings.Join([]string{
+		strings.TrimSpace(vuln.Summary),
+		strings.TrimSpace(vuln.Details),
+		strings.Join(vuln.Aliases, " "),
+	}, " "))
+	if text == "" {
+		return false
+	}
+
+	signals := []string{
+		"compromised",
+		"malicious",
+		"supply chain",
+		"supply-chain",
+		"credential exfiltration",
+		"exfiltration routine",
+		"maintainer",
+		"account takeover",
+		"hijack",
+		"hijacked",
+		"backdoor",
+		"protestware",
+		"dependency confusion",
+		"typosquat",
+		"typosquatting",
+		"poisoned package",
+		"poisoned release",
+		"stolen release token",
+		"malicious dependency",
+	}
+	for _, signal := range signals {
+		if strings.Contains(text, signal) {
+			return true
+		}
+	}
+	return false
 }
 
 func readExistingBlacklist(path string) (map[string]struct{}, error) {
