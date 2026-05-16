@@ -19,5 +19,70 @@
     "source": "https://github.com/AgentSafe-AI/tooltrust-scanner/blob/main/pkg/analyzer/npm_scripts.go",
     "first_seen": "2026-03-31",
     "suggested_action": "flag"
+  },
+  {
+    "ecosystem": "npm",
+    "ioc_type": "package_name",
+    "name": "@tanstack/setup",
+    "reason": "Mini Shai-Hulud / TanStack IOC: malicious package manifests added this fictitious optional dependency pointing at github:tanstack/router#79ac49eedf774dd4b0cfa308722bc463cfe5885c.",
+    "confidence": "high",
+    "source": "https://github.com/advisories/GHSA-g7cv-rxg3-hmpx",
+    "first_seen": "2026-05-11",
+    "suggested_action": "flag"
+  },
+  {
+    "ecosystem": "npm",
+    "ioc_type": "domain",
+    "value": "filev2.getsession.org",
+    "match": "exact",
+    "reason": "Mini Shai-Hulud / TanStack IOC: exfiltration network used by the credential-stealing payload.",
+    "confidence": "high",
+    "source": "https://github.com/advisories/GHSA-g7cv-rxg3-hmpx",
+    "first_seen": "2026-05-11",
+    "suggested_action": "flag"
+  },
+  {
+    "ecosystem": "npm",
+    "ioc_type": "domain",
+    "value": "git-tanstack.com",
+    "match": "exact",
+    "reason": "Mini Shai-Hulud IOC: attacker-controlled infrastructure used to host second-stage payloads in related npm/PyPI compromises.",
+    "confidence": "high",
+    "source": "https://socket.dev/blog/tanstack-npm-packages-compromised-mini-shai-hulud-supply-chain-attack",
+    "first_seen": "2026-05-12",
+    "suggested_action": "flag"
+  },
+  {
+    "ecosystem": "npm",
+    "ioc_type": "url",
+    "value": "https://litter.catbox.moe/h8nc9u.js",
+    "match": "exact",
+    "reason": "Mini Shai-Hulud / TanStack IOC: reported second-stage payload URL.",
+    "confidence": "high",
+    "source": "https://github.com/advisories/GHSA-g7cv-rxg3-hmpx",
+    "first_seen": "2026-05-11",
+    "suggested_action": "flag"
+  },
+  {
+    "ecosystem": "npm",
+    "ioc_type": "url",
+    "value": "https://litter.catbox.moe/7rrc6l.mjs",
+    "match": "exact",
+    "reason": "Mini Shai-Hulud / TanStack IOC: reported second-stage payload URL.",
+    "confidence": "high",
+    "source": "https://github.com/advisories/GHSA-g7cv-rxg3-hmpx",
+    "first_seen": "2026-05-11",
+    "suggested_action": "flag"
+  },
+  {
+    "ecosystem": "npm",
+    "ioc_type": "script_pattern",
+    "value": "tanstack_runner.js",
+    "match": "contains",
+    "reason": "Mini Shai-Hulud / TanStack IOC: helper payload filename in the malicious orphan git dependency.",
+    "confidence": "high",
+    "source": "https://github.com/advisories/GHSA-g7cv-rxg3-hmpx",
+    "first_seen": "2026-05-11",
+    "suggested_action": "flag"
   }
 ]

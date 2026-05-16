@@ -68,5 +68,455 @@
     "severity": "CRITICAL",
     "reason": "Confirmed npm supply-chain compromise: attackers hijacked Bitwarden's GitHub Actions, stole release secrets, and pushed a tampered @bitwarden/cli@2026.4.0 build to npm containing malicious code. Remove immediately and rotate any credentials that passed through the CLI.",
     "link": "https://thehackernews.com/2026/04/bitwarden-cli-supply-chain-attack.html"
+  },
+  {
+    "id": "CVE-2026-45321",
+    "component": "@tanstack/arktype-adapter",
+    "ecosystem": "npm",
+    "affected_versions": ["1.166.12", "1.166.15"],
+    "action": "BLOCK",
+    "severity": "CRITICAL",
+    "reason": "Mini Shai-Hulud / TanStack supply-chain compromise: malicious npm package versions execute an obfuscated router_init.js payload that harvests cloud, GitHub, npm, Kubernetes, Vault, and SSH credentials and propagates through npm publishing workflows.",
+    "link": "https://github.com/advisories/GHSA-g7cv-rxg3-hmpx"
+  },
+  {
+    "id": "CVE-2026-45321",
+    "component": "@tanstack/eslint-plugin-router",
+    "ecosystem": "npm",
+    "affected_versions": ["1.161.9", "1.161.12"],
+    "action": "BLOCK",
+    "severity": "CRITICAL",
+    "reason": "Mini Shai-Hulud / TanStack supply-chain compromise: malicious npm package versions execute an obfuscated router_init.js payload that harvests cloud, GitHub, npm, Kubernetes, Vault, and SSH credentials and propagates through npm publishing workflows.",
+    "link": "https://github.com/advisories/GHSA-g7cv-rxg3-hmpx"
+  },
+  {
+    "id": "CVE-2026-45321",
+    "component": "@tanstack/eslint-plugin-start",
+    "ecosystem": "npm",
+    "affected_versions": ["0.0.4", "0.0.7"],
+    "action": "BLOCK",
+    "severity": "CRITICAL",
+    "reason": "Mini Shai-Hulud / TanStack supply-chain compromise: malicious npm package versions execute an obfuscated router_init.js payload that harvests cloud, GitHub, npm, Kubernetes, Vault, and SSH credentials and propagates through npm publishing workflows.",
+    "link": "https://github.com/advisories/GHSA-g7cv-rxg3-hmpx"
+  },
+  {
+    "id": "CVE-2026-45321",
+    "component": "@tanstack/history",
+    "ecosystem": "npm",
+    "affected_versions": ["1.161.9", "1.161.12"],
+    "action": "BLOCK",
+    "severity": "CRITICAL",
+    "reason": "Mini Shai-Hulud / TanStack supply-chain compromise: malicious npm package versions execute an obfuscated router_init.js payload that harvests cloud, GitHub, npm, Kubernetes, Vault, and SSH credentials and propagates through npm publishing workflows.",
+    "link": "https://github.com/advisories/GHSA-g7cv-rxg3-hmpx"
+  },
+  {
+    "id": "CVE-2026-45321",
+    "component": "@tanstack/nitro-v2-vite-plugin",
+    "ecosystem": "npm",
+    "affected_versions": ["1.154.12", "1.154.15"],
+    "action": "BLOCK",
+    "severity": "CRITICAL",
+    "reason": "Mini Shai-Hulud / TanStack supply-chain compromise: malicious npm package versions execute an obfuscated router_init.js payload that harvests cloud, GitHub, npm, Kubernetes, Vault, and SSH credentials and propagates through npm publishing workflows.",
+    "link": "https://github.com/advisories/GHSA-g7cv-rxg3-hmpx"
+  },
+  {
+    "id": "CVE-2026-45321",
+    "component": "@tanstack/react-router",
+    "ecosystem": "npm",
+    "affected_versions": ["1.169.5", "1.169.8"],
+    "action": "BLOCK",
+    "severity": "CRITICAL",
+    "reason": "Mini Shai-Hulud / TanStack supply-chain compromise: malicious npm package versions execute an obfuscated router_init.js payload that harvests cloud, GitHub, npm, Kubernetes, Vault, and SSH credentials and propagates through npm publishing workflows.",
+    "link": "https://github.com/advisories/GHSA-g7cv-rxg3-hmpx"
+  },
+  {
+    "id": "CVE-2026-45321",
+    "component": "@tanstack/react-router-devtools",
+    "ecosystem": "npm",
+    "affected_versions": ["1.166.16", "1.166.19"],
+    "action": "BLOCK",
+    "severity": "CRITICAL",
+    "reason": "Mini Shai-Hulud / TanStack supply-chain compromise: malicious npm package versions execute an obfuscated router_init.js payload that harvests cloud, GitHub, npm, Kubernetes, Vault, and SSH credentials and propagates through npm publishing workflows.",
+    "link": "https://github.com/advisories/GHSA-g7cv-rxg3-hmpx"
+  },
+  {
+    "id": "CVE-2026-45321",
+    "component": "@tanstack/react-router-ssr-query",
+    "ecosystem": "npm",
+    "affected_versions": ["1.166.15", "1.166.18"],
+    "action": "BLOCK",
+    "severity": "CRITICAL",
+    "reason": "Mini Shai-Hulud / TanStack supply-chain compromise: malicious npm package versions execute an obfuscated router_init.js payload that harvests cloud, GitHub, npm, Kubernetes, Vault, and SSH credentials and propagates through npm publishing workflows.",
+    "link": "https://github.com/advisories/GHSA-g7cv-rxg3-hmpx"
+  },
+  {
+    "id": "CVE-2026-45321",
+    "component": "@tanstack/react-start",
+    "ecosystem": "npm",
+    "affected_versions": ["1.167.68", "1.167.71"],
+    "action": "BLOCK",
+    "severity": "CRITICAL",
+    "reason": "Mini Shai-Hulud / TanStack supply-chain compromise: malicious npm package versions execute an obfuscated router_init.js payload that harvests cloud, GitHub, npm, Kubernetes, Vault, and SSH credentials and propagates through npm publishing workflows.",
+    "link": "https://github.com/advisories/GHSA-g7cv-rxg3-hmpx"
+  },
+  {
+    "id": "CVE-2026-45321",
+    "component": "@tanstack/react-start-client",
+    "ecosystem": "npm",
+    "affected_versions": ["1.166.51", "1.166.54"],
+    "action": "BLOCK",
+    "severity": "CRITICAL",
+    "reason": "Mini Shai-Hulud / TanStack supply-chain compromise: malicious npm package versions execute an obfuscated router_init.js payload that harvests cloud, GitHub, npm, Kubernetes, Vault, and SSH credentials and propagates through npm publishing workflows.",
+    "link": "https://github.com/advisories/GHSA-g7cv-rxg3-hmpx"
+  },
+  {
+    "id": "CVE-2026-45321",
+    "component": "@tanstack/react-start-rsc",
+    "ecosystem": "npm",
+    "affected_versions": ["0.0.47", "0.0.50"],
+    "action": "BLOCK",
+    "severity": "CRITICAL",
+    "reason": "Mini Shai-Hulud / TanStack supply-chain compromise: malicious npm package versions execute an obfuscated router_init.js payload that harvests cloud, GitHub, npm, Kubernetes, Vault, and SSH credentials and propagates through npm publishing workflows.",
+    "link": "https://github.com/advisories/GHSA-g7cv-rxg3-hmpx"
+  },
+  {
+    "id": "CVE-2026-45321",
+    "component": "@tanstack/react-start-server",
+    "ecosystem": "npm",
+    "affected_versions": ["1.166.55", "1.166.58"],
+    "action": "BLOCK",
+    "severity": "CRITICAL",
+    "reason": "Mini Shai-Hulud / TanStack supply-chain compromise: malicious npm package versions execute an obfuscated router_init.js payload that harvests cloud, GitHub, npm, Kubernetes, Vault, and SSH credentials and propagates through npm publishing workflows.",
+    "link": "https://github.com/advisories/GHSA-g7cv-rxg3-hmpx"
+  },
+  {
+    "id": "CVE-2026-45321",
+    "component": "@tanstack/router-cli",
+    "ecosystem": "npm",
+    "affected_versions": ["1.166.46", "1.166.49"],
+    "action": "BLOCK",
+    "severity": "CRITICAL",
+    "reason": "Mini Shai-Hulud / TanStack supply-chain compromise: malicious npm package versions execute an obfuscated router_init.js payload that harvests cloud, GitHub, npm, Kubernetes, Vault, and SSH credentials and propagates through npm publishing workflows.",
+    "link": "https://github.com/advisories/GHSA-g7cv-rxg3-hmpx"
+  },
+  {
+    "id": "CVE-2026-45321",
+    "component": "@tanstack/router-core",
+    "ecosystem": "npm",
+    "affected_versions": ["1.169.5", "1.169.8"],
+    "action": "BLOCK",
+    "severity": "CRITICAL",
+    "reason": "Mini Shai-Hulud / TanStack supply-chain compromise: malicious npm package versions execute an obfuscated router_init.js payload that harvests cloud, GitHub, npm, Kubernetes, Vault, and SSH credentials and propagates through npm publishing workflows.",
+    "link": "https://github.com/advisories/GHSA-g7cv-rxg3-hmpx"
+  },
+  {
+    "id": "CVE-2026-45321",
+    "component": "@tanstack/router-devtools",
+    "ecosystem": "npm",
+    "affected_versions": ["1.166.16", "1.166.19"],
+    "action": "BLOCK",
+    "severity": "CRITICAL",
+    "reason": "Mini Shai-Hulud / TanStack supply-chain compromise: malicious npm package versions execute an obfuscated router_init.js payload that harvests cloud, GitHub, npm, Kubernetes, Vault, and SSH credentials and propagates through npm publishing workflows.",
+    "link": "https://github.com/advisories/GHSA-g7cv-rxg3-hmpx"
+  },
+  {
+    "id": "CVE-2026-45321",
+    "component": "@tanstack/router-devtools-core",
+    "ecosystem": "npm",
+    "affected_versions": ["1.167.6", "1.167.9"],
+    "action": "BLOCK",
+    "severity": "CRITICAL",
+    "reason": "Mini Shai-Hulud / TanStack supply-chain compromise: malicious npm package versions execute an obfuscated router_init.js payload that harvests cloud, GitHub, npm, Kubernetes, Vault, and SSH credentials and propagates through npm publishing workflows.",
+    "link": "https://github.com/advisories/GHSA-g7cv-rxg3-hmpx"
+  },
+  {
+    "id": "CVE-2026-45321",
+    "component": "@tanstack/router-generator",
+    "ecosystem": "npm",
+    "affected_versions": ["1.166.45", "1.166.48"],
+    "action": "BLOCK",
+    "severity": "CRITICAL",
+    "reason": "Mini Shai-Hulud / TanStack supply-chain compromise: malicious npm package versions execute an obfuscated router_init.js payload that harvests cloud, GitHub, npm, Kubernetes, Vault, and SSH credentials and propagates through npm publishing workflows.",
+    "link": "https://github.com/advisories/GHSA-g7cv-rxg3-hmpx"
+  },
+  {
+    "id": "CVE-2026-45321",
+    "component": "@tanstack/router-plugin",
+    "ecosystem": "npm",
+    "affected_versions": ["1.167.38", "1.167.41"],
+    "action": "BLOCK",
+    "severity": "CRITICAL",
+    "reason": "Mini Shai-Hulud / TanStack supply-chain compromise: malicious npm package versions execute an obfuscated router_init.js payload that harvests cloud, GitHub, npm, Kubernetes, Vault, and SSH credentials and propagates through npm publishing workflows.",
+    "link": "https://github.com/advisories/GHSA-g7cv-rxg3-hmpx"
+  },
+  {
+    "id": "CVE-2026-45321",
+    "component": "@tanstack/router-ssr-query-core",
+    "ecosystem": "npm",
+    "affected_versions": ["1.168.3", "1.168.6"],
+    "action": "BLOCK",
+    "severity": "CRITICAL",
+    "reason": "Mini Shai-Hulud / TanStack supply-chain compromise: malicious npm package versions execute an obfuscated router_init.js payload that harvests cloud, GitHub, npm, Kubernetes, Vault, and SSH credentials and propagates through npm publishing workflows.",
+    "link": "https://github.com/advisories/GHSA-g7cv-rxg3-hmpx"
+  },
+  {
+    "id": "CVE-2026-45321",
+    "component": "@tanstack/router-utils",
+    "ecosystem": "npm",
+    "affected_versions": ["1.161.11", "1.161.14"],
+    "action": "BLOCK",
+    "severity": "CRITICAL",
+    "reason": "Mini Shai-Hulud / TanStack supply-chain compromise: malicious npm package versions execute an obfuscated router_init.js payload that harvests cloud, GitHub, npm, Kubernetes, Vault, and SSH credentials and propagates through npm publishing workflows.",
+    "link": "https://github.com/advisories/GHSA-g7cv-rxg3-hmpx"
+  },
+  {
+    "id": "CVE-2026-45321",
+    "component": "@tanstack/router-vite-plugin",
+    "ecosystem": "npm",
+    "affected_versions": ["1.166.53", "1.166.56"],
+    "action": "BLOCK",
+    "severity": "CRITICAL",
+    "reason": "Mini Shai-Hulud / TanStack supply-chain compromise: malicious npm package versions execute an obfuscated router_init.js payload that harvests cloud, GitHub, npm, Kubernetes, Vault, and SSH credentials and propagates through npm publishing workflows.",
+    "link": "https://github.com/advisories/GHSA-g7cv-rxg3-hmpx"
+  },
+  {
+    "id": "CVE-2026-45321",
+    "component": "@tanstack/solid-router",
+    "ecosystem": "npm",
+    "affected_versions": ["1.169.5", "1.169.8"],
+    "action": "BLOCK",
+    "severity": "CRITICAL",
+    "reason": "Mini Shai-Hulud / TanStack supply-chain compromise: malicious npm package versions execute an obfuscated router_init.js payload that harvests cloud, GitHub, npm, Kubernetes, Vault, and SSH credentials and propagates through npm publishing workflows.",
+    "link": "https://github.com/advisories/GHSA-g7cv-rxg3-hmpx"
+  },
+  {
+    "id": "CVE-2026-45321",
+    "component": "@tanstack/solid-router-devtools",
+    "ecosystem": "npm",
+    "affected_versions": ["1.166.16", "1.166.19"],
+    "action": "BLOCK",
+    "severity": "CRITICAL",
+    "reason": "Mini Shai-Hulud / TanStack supply-chain compromise: malicious npm package versions execute an obfuscated router_init.js payload that harvests cloud, GitHub, npm, Kubernetes, Vault, and SSH credentials and propagates through npm publishing workflows.",
+    "link": "https://github.com/advisories/GHSA-g7cv-rxg3-hmpx"
+  },
+  {
+    "id": "CVE-2026-45321",
+    "component": "@tanstack/solid-router-ssr-query",
+    "ecosystem": "npm",
+    "affected_versions": ["1.166.15", "1.166.18"],
+    "action": "BLOCK",
+    "severity": "CRITICAL",
+    "reason": "Mini Shai-Hulud / TanStack supply-chain compromise: malicious npm package versions execute an obfuscated router_init.js payload that harvests cloud, GitHub, npm, Kubernetes, Vault, and SSH credentials and propagates through npm publishing workflows.",
+    "link": "https://github.com/advisories/GHSA-g7cv-rxg3-hmpx"
+  },
+  {
+    "id": "CVE-2026-45321",
+    "component": "@tanstack/solid-start",
+    "ecosystem": "npm",
+    "affected_versions": ["1.167.65", "1.167.68"],
+    "action": "BLOCK",
+    "severity": "CRITICAL",
+    "reason": "Mini Shai-Hulud / TanStack supply-chain compromise: malicious npm package versions execute an obfuscated router_init.js payload that harvests cloud, GitHub, npm, Kubernetes, Vault, and SSH credentials and propagates through npm publishing workflows.",
+    "link": "https://github.com/advisories/GHSA-g7cv-rxg3-hmpx"
+  },
+  {
+    "id": "CVE-2026-45321",
+    "component": "@tanstack/solid-start-client",
+    "ecosystem": "npm",
+    "affected_versions": ["1.166.50", "1.166.53"],
+    "action": "BLOCK",
+    "severity": "CRITICAL",
+    "reason": "Mini Shai-Hulud / TanStack supply-chain compromise: malicious npm package versions execute an obfuscated router_init.js payload that harvests cloud, GitHub, npm, Kubernetes, Vault, and SSH credentials and propagates through npm publishing workflows.",
+    "link": "https://github.com/advisories/GHSA-g7cv-rxg3-hmpx"
+  },
+  {
+    "id": "CVE-2026-45321",
+    "component": "@tanstack/solid-start-server",
+    "ecosystem": "npm",
+    "affected_versions": ["1.166.54", "1.166.57"],
+    "action": "BLOCK",
+    "severity": "CRITICAL",
+    "reason": "Mini Shai-Hulud / TanStack supply-chain compromise: malicious npm package versions execute an obfuscated router_init.js payload that harvests cloud, GitHub, npm, Kubernetes, Vault, and SSH credentials and propagates through npm publishing workflows.",
+    "link": "https://github.com/advisories/GHSA-g7cv-rxg3-hmpx"
+  },
+  {
+    "id": "CVE-2026-45321",
+    "component": "@tanstack/start-client-core",
+    "ecosystem": "npm",
+    "affected_versions": ["1.168.5", "1.168.8"],
+    "action": "BLOCK",
+    "severity": "CRITICAL",
+    "reason": "Mini Shai-Hulud / TanStack supply-chain compromise: malicious npm package versions execute an obfuscated router_init.js payload that harvests cloud, GitHub, npm, Kubernetes, Vault, and SSH credentials and propagates through npm publishing workflows.",
+    "link": "https://github.com/advisories/GHSA-g7cv-rxg3-hmpx"
+  },
+  {
+    "id": "CVE-2026-45321",
+    "component": "@tanstack/start-fn-stubs",
+    "ecosystem": "npm",
+    "affected_versions": ["1.161.9", "1.161.12"],
+    "action": "BLOCK",
+    "severity": "CRITICAL",
+    "reason": "Mini Shai-Hulud / TanStack supply-chain compromise: malicious npm package versions execute an obfuscated router_init.js payload that harvests cloud, GitHub, npm, Kubernetes, Vault, and SSH credentials and propagates through npm publishing workflows.",
+    "link": "https://github.com/advisories/GHSA-g7cv-rxg3-hmpx"
+  },
+  {
+    "id": "CVE-2026-45321",
+    "component": "@tanstack/start-plugin-core",
+    "ecosystem": "npm",
+    "affected_versions": ["1.169.23", "1.169.26"],
+    "action": "BLOCK",
+    "severity": "CRITICAL",
+    "reason": "Mini Shai-Hulud / TanStack supply-chain compromise: malicious npm package versions execute an obfuscated router_init.js payload that harvests cloud, GitHub, npm, Kubernetes, Vault, and SSH credentials and propagates through npm publishing workflows.",
+    "link": "https://github.com/advisories/GHSA-g7cv-rxg3-hmpx"
+  },
+  {
+    "id": "CVE-2026-45321",
+    "component": "@tanstack/start-server-core",
+    "ecosystem": "npm",
+    "affected_versions": ["1.167.33", "1.167.36"],
+    "action": "BLOCK",
+    "severity": "CRITICAL",
+    "reason": "Mini Shai-Hulud / TanStack supply-chain compromise: malicious npm package versions execute an obfuscated router_init.js payload that harvests cloud, GitHub, npm, Kubernetes, Vault, and SSH credentials and propagates through npm publishing workflows.",
+    "link": "https://github.com/advisories/GHSA-g7cv-rxg3-hmpx"
+  },
+  {
+    "id": "CVE-2026-45321",
+    "component": "@tanstack/start-static-server-functions",
+    "ecosystem": "npm",
+    "affected_versions": ["1.166.44", "1.166.47"],
+    "action": "BLOCK",
+    "severity": "CRITICAL",
+    "reason": "Mini Shai-Hulud / TanStack supply-chain compromise: malicious npm package versions execute an obfuscated router_init.js payload that harvests cloud, GitHub, npm, Kubernetes, Vault, and SSH credentials and propagates through npm publishing workflows.",
+    "link": "https://github.com/advisories/GHSA-g7cv-rxg3-hmpx"
+  },
+  {
+    "id": "CVE-2026-45321",
+    "component": "@tanstack/start-storage-context",
+    "ecosystem": "npm",
+    "affected_versions": ["1.166.38", "1.166.41"],
+    "action": "BLOCK",
+    "severity": "CRITICAL",
+    "reason": "Mini Shai-Hulud / TanStack supply-chain compromise: malicious npm package versions execute an obfuscated router_init.js payload that harvests cloud, GitHub, npm, Kubernetes, Vault, and SSH credentials and propagates through npm publishing workflows.",
+    "link": "https://github.com/advisories/GHSA-g7cv-rxg3-hmpx"
+  },
+  {
+    "id": "CVE-2026-45321",
+    "component": "@tanstack/valibot-adapter",
+    "ecosystem": "npm",
+    "affected_versions": ["1.166.12", "1.166.15"],
+    "action": "BLOCK",
+    "severity": "CRITICAL",
+    "reason": "Mini Shai-Hulud / TanStack supply-chain compromise: malicious npm package versions execute an obfuscated router_init.js payload that harvests cloud, GitHub, npm, Kubernetes, Vault, and SSH credentials and propagates through npm publishing workflows.",
+    "link": "https://github.com/advisories/GHSA-g7cv-rxg3-hmpx"
+  },
+  {
+    "id": "CVE-2026-45321",
+    "component": "@tanstack/virtual-file-routes",
+    "ecosystem": "npm",
+    "affected_versions": ["1.161.10", "1.161.13"],
+    "action": "BLOCK",
+    "severity": "CRITICAL",
+    "reason": "Mini Shai-Hulud / TanStack supply-chain compromise: malicious npm package versions execute an obfuscated router_init.js payload that harvests cloud, GitHub, npm, Kubernetes, Vault, and SSH credentials and propagates through npm publishing workflows.",
+    "link": "https://github.com/advisories/GHSA-g7cv-rxg3-hmpx"
+  },
+  {
+    "id": "CVE-2026-45321",
+    "component": "@tanstack/vue-router",
+    "ecosystem": "npm",
+    "affected_versions": ["1.169.5", "1.169.8"],
+    "action": "BLOCK",
+    "severity": "CRITICAL",
+    "reason": "Mini Shai-Hulud / TanStack supply-chain compromise: malicious npm package versions execute an obfuscated router_init.js payload that harvests cloud, GitHub, npm, Kubernetes, Vault, and SSH credentials and propagates through npm publishing workflows.",
+    "link": "https://github.com/advisories/GHSA-g7cv-rxg3-hmpx"
+  },
+  {
+    "id": "CVE-2026-45321",
+    "component": "@tanstack/vue-router-devtools",
+    "ecosystem": "npm",
+    "affected_versions": ["1.166.16", "1.166.19"],
+    "action": "BLOCK",
+    "severity": "CRITICAL",
+    "reason": "Mini Shai-Hulud / TanStack supply-chain compromise: malicious npm package versions execute an obfuscated router_init.js payload that harvests cloud, GitHub, npm, Kubernetes, Vault, and SSH credentials and propagates through npm publishing workflows.",
+    "link": "https://github.com/advisories/GHSA-g7cv-rxg3-hmpx"
+  },
+  {
+    "id": "CVE-2026-45321",
+    "component": "@tanstack/vue-router-ssr-query",
+    "ecosystem": "npm",
+    "affected_versions": ["1.166.15", "1.166.18"],
+    "action": "BLOCK",
+    "severity": "CRITICAL",
+    "reason": "Mini Shai-Hulud / TanStack supply-chain compromise: malicious npm package versions execute an obfuscated router_init.js payload that harvests cloud, GitHub, npm, Kubernetes, Vault, and SSH credentials and propagates through npm publishing workflows.",
+    "link": "https://github.com/advisories/GHSA-g7cv-rxg3-hmpx"
+  },
+  {
+    "id": "CVE-2026-45321",
+    "component": "@tanstack/vue-start",
+    "ecosystem": "npm",
+    "affected_versions": ["1.167.61", "1.167.64"],
+    "action": "BLOCK",
+    "severity": "CRITICAL",
+    "reason": "Mini Shai-Hulud / TanStack supply-chain compromise: malicious npm package versions execute an obfuscated router_init.js payload that harvests cloud, GitHub, npm, Kubernetes, Vault, and SSH credentials and propagates through npm publishing workflows.",
+    "link": "https://github.com/advisories/GHSA-g7cv-rxg3-hmpx"
+  },
+  {
+    "id": "CVE-2026-45321",
+    "component": "@tanstack/vue-start-client",
+    "ecosystem": "npm",
+    "affected_versions": ["1.166.46", "1.166.49"],
+    "action": "BLOCK",
+    "severity": "CRITICAL",
+    "reason": "Mini Shai-Hulud / TanStack supply-chain compromise: malicious npm package versions execute an obfuscated router_init.js payload that harvests cloud, GitHub, npm, Kubernetes, Vault, and SSH credentials and propagates through npm publishing workflows.",
+    "link": "https://github.com/advisories/GHSA-g7cv-rxg3-hmpx"
+  },
+  {
+    "id": "CVE-2026-45321",
+    "component": "@tanstack/vue-start-server",
+    "ecosystem": "npm",
+    "affected_versions": ["1.166.50", "1.166.53"],
+    "action": "BLOCK",
+    "severity": "CRITICAL",
+    "reason": "Mini Shai-Hulud / TanStack supply-chain compromise: malicious npm package versions execute an obfuscated router_init.js payload that harvests cloud, GitHub, npm, Kubernetes, Vault, and SSH credentials and propagates through npm publishing workflows.",
+    "link": "https://github.com/advisories/GHSA-g7cv-rxg3-hmpx"
+  },
+  {
+    "id": "CVE-2026-45321",
+    "component": "@tanstack/zod-adapter",
+    "ecosystem": "npm",
+    "affected_versions": ["1.166.12", "1.166.15"],
+    "action": "BLOCK",
+    "severity": "CRITICAL",
+    "reason": "Mini Shai-Hulud / TanStack supply-chain compromise: malicious npm package versions execute an obfuscated router_init.js payload that harvests cloud, GitHub, npm, Kubernetes, Vault, and SSH credentials and propagates through npm publishing workflows.",
+    "link": "https://github.com/advisories/GHSA-g7cv-rxg3-hmpx"
+  },
+  {
+    "id": "MINI-SHAI-HULUD-2026-05-11",
+    "component": "@opensearch-project/opensearch",
+    "ecosystem": "npm",
+    "affected_versions": ["3.5.3", "3.6.2", "3.7.0", "3.8.0"],
+    "action": "BLOCK",
+    "severity": "CRITICAL",
+    "reason": "Mini Shai-Hulud supply-chain compromise: confirmed malicious package artifacts tied to credential theft and remote payload execution across npm/PyPI ecosystems.",
+    "link": "https://socket.dev/blog/tanstack-npm-packages-compromised-mini-shai-hulud-supply-chain-attack"
+  },
+  {
+    "id": "MINI-SHAI-HULUD-2026-05-11",
+    "component": "mistralai",
+    "ecosystem": "PyPI",
+    "affected_versions": ["2.4.6"],
+    "action": "BLOCK",
+    "severity": "CRITICAL",
+    "reason": "Mini Shai-Hulud supply-chain compromise: compromised PyPI release reportedly downloads and executes a secondary payload on Linux systems and targets developer credentials.",
+    "link": "https://thehackernews.com/2026/05/tanstack-supply-chain-attack-hits-two.html"
+  },
+  {
+    "id": "MINI-SHAI-HULUD-2026-05-11",
+    "component": "guardrails-ai",
+    "ecosystem": "PyPI",
+    "affected_versions": ["0.10.1"],
+    "action": "BLOCK",
+    "severity": "CRITICAL",
+    "reason": "Mini Shai-Hulud supply-chain compromise: compromised PyPI release downloads a remote Python artifact and executes it without integrity verification.",
+    "link": "https://socket.dev/blog/tanstack-npm-packages-compromised-mini-shai-hulud-supply-chain-attack"
   }
 ]

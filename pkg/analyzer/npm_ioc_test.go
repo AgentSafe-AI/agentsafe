@@ -90,6 +90,33 @@ func TestNPMIOCChecker_SuspiciousScriptPattern_Finding(t *testing.T) {
 	assert.Contains(t, issues[0].Description, "curl -fssl")
 }
 
+func TestNPMIOCChecker_TanStackSetupOptionalDependency_Finding(t *testing.T) {
+	checker := analyzer.NewNPMIOCCheckerWithMock(map[string]analyzer.NPMVersionResponseForTest{
+		"@tanstack/react-router@1.169.8": {
+			Name:                 "@tanstack/react-router",
+			Version:              "1.169.8",
+			OptionalDependencies: map[string]string{"@tanstack/setup": "github:tanstack/router#79ac49eedf774dd4b0cfa308722bc463cfe5885c"},
+		},
+	}, nil)
+
+	tool := model.UnifiedTool{
+		Name: "router_mcp",
+		Metadata: map[string]any{
+			"dependencies": []any{
+				map[string]any{"name": "@tanstack/react-router", "version": "1.169.8", "ecosystem": "npm"},
+			},
+		},
+	}
+
+	issues, err := checker.Check(tool)
+	require.NoError(t, err)
+	require.Len(t, issues, 1)
+	assert.Equal(t, "AS-016", issues[0].RuleID)
+	assert.Equal(t, "NPM_IOC_DEPENDENCY", issues[0].Code)
+	assert.Equal(t, model.SeverityCritical, issues[0].Severity)
+	assert.Contains(t, issues[0].Description, "@tanstack/setup")
+}
+
 func TestNPMIOCChecker_SuspiciousDomainIOC_Finding(t *testing.T) {
 	checker := analyzer.NewNPMIOCCheckerWithMock(map[string]analyzer.NPMVersionResponseForTest{
 		"axios@1.14.1": {
