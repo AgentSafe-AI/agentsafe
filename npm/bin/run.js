@@ -29,11 +29,7 @@ if (!goos || !goarch) {
 }
 
 const suffix = goos === 'windows' ? '.exe' : '';
-const binName = `tooltrust-mcp_${goos}_${goarch}${suffix}`;
-const downloadUrl = `https://github.com/AgentSafe-AI/tooltrust-scanner/releases/latest/download/${binName}`;
-
-const cacheDir = path.join(os.homedir(), '.tooltrust-mcp', 'bin');
-const binPath = path.join(cacheDir, binName);
+const releaseBinName = `tooltrust-mcp_${goos}_${goarch}${suffix}`;
 
 function downloadFile(url, dest) {
   return new Promise((resolve, reject) => {
@@ -61,7 +57,7 @@ function downloadFile(url, dest) {
   });
 }
 
-function runBinary(args) {
+function runBinary(binPath, args) {
   const child = spawn(binPath, args, { stdio: 'inherit' });
   child.on('error', (err) => {
     console.error(`Failed to start subprocess: ${err}`);
@@ -74,6 +70,11 @@ function runBinary(args) {
 async function main() {
   const pkg = require('../package.json');
   const args = process.argv.slice(2);
+  const binaryVersion = pkg.tooltrustBinaryVersion || 'latest';
+  const cacheBinName = `${binaryVersion}_${releaseBinName}`;
+  const downloadUrl = `https://github.com/AgentSafe-AI/tooltrust-scanner/releases/download/${binaryVersion}/${releaseBinName}`;
+  const cacheDir = path.join(os.homedir(), '.tooltrust-mcp', 'bin');
+  const binPath = path.join(cacheDir, cacheBinName);
 
   // --version is the only flag handled by the wrapper (shows npm package version).
   // All other flags (--help, --rules) pass through to the Go binary.
@@ -94,7 +95,7 @@ async function main() {
     }
   }
   
-  runBinary(args);
+  runBinary(binPath, args);
 }
 
 main();
