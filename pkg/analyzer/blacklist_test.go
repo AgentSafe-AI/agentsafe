@@ -112,6 +112,45 @@ func TestBlacklist_Axios_SafeVersion_NoFinding(t *testing.T) {
 	assert.Empty(t, issues)
 }
 
+func TestBlacklist_TanStackMiniShaiHulud_Hit(t *testing.T) {
+	bc := analyzer.NewBlacklistChecker()
+	tool := toolWithDep("@tanstack/react-router", "1.169.8", "npm")
+	issues, err := bc.Check(tool)
+	require.NoError(t, err)
+	require.Len(t, issues, 1)
+	assert.Equal(t, "SUPPLY_CHAIN_BLOCK", issues[0].Code)
+	assert.Equal(t, model.SeverityCritical, issues[0].Severity)
+	assert.Contains(t, issues[0].Description, "CVE-2026-45321")
+	assert.Contains(t, issues[0].Description, "Mini Shai-Hulud")
+	assert.Contains(t, issues[0].Description, "@tanstack/react-router@1.169.8")
+}
+
+func TestBlacklist_TanStackPatchedVersion_NoFinding(t *testing.T) {
+	bc := analyzer.NewBlacklistChecker()
+	tool := toolWithDep("@tanstack/react-router", "1.169.9", "npm")
+	issues, err := bc.Check(tool)
+	require.NoError(t, err)
+	assert.Empty(t, issues)
+}
+
+func TestBlacklist_MiniShaiHuludPyPI_Hit(t *testing.T) {
+	bc := analyzer.NewBlacklistChecker()
+	for _, tc := range []struct {
+		name    string
+		version string
+	}{
+		{name: "mistralai", version: "2.4.6"},
+		{name: "guardrails-ai", version: "0.10.1"},
+	} {
+		tool := toolWithDep(tc.name, tc.version, "PyPI")
+		issues, err := bc.Check(tool)
+		require.NoError(t, err, "%s", tc.name)
+		require.Len(t, issues, 1, "%s should be blocked", tc.name)
+		assert.Equal(t, "SUPPLY_CHAIN_BLOCK", issues[0].Code)
+		assert.Contains(t, issues[0].Description, "MINI-SHAI-HULUD-2026-05-11")
+	}
+}
+
 func TestBlacklist_RepoURLLockfileDependency_Hit(t *testing.T) {
 	withLockfileDepsForTest(t, []analyzer.Dependency{
 		{Name: "axios", Version: "1.14.1", Ecosystem: "npm"},

@@ -71,7 +71,7 @@ Tools with no description or no input schema give the agent no basis for safe us
 
 Checks an offline bundled blacklist of packages confirmed to have been compromised in supply chain attacks. No network required — zero latency.
 
-Current blacklist: LiteLLM 1.82.7/1.82.8 (TeamPCP `.pth` backdoor), Trivy v0.69.4–v0.69.6 (CI pipeline compromise), Langflow < 1.9.0 (unauthenticated RCE), Axios 1.14.1/0.30.4 (malicious npm publish).
+Current blacklist: LiteLLM 1.82.7/1.82.8 (TeamPCP `.pth` backdoor), Trivy v0.69.4–v0.69.6 (CI pipeline compromise), Langflow < 1.9.0 (unauthenticated RCE), Axios 1.14.1/0.30.4 (malicious npm publish), Bitwarden CLI 2026.4.0, and Mini Shai-Hulud/TanStack-related compromised npm/PyPI package versions.
 
 ---
 
@@ -129,7 +129,7 @@ Flags npm dependency versions that publish install-time lifecycle scripts such a
 
 **Severity:** Critical
 
-Flags npm dependency versions whose published registry metadata or install-time scripts reference known malicious IOC package names, domains, URLs, or script patterns, such as `plain-crypto-js` or reviewed shell-fetch indicators. This is narrower than full tarball signature scanning, but it can still catch compromised releases when an IOC appears in dependency metadata.
+Flags npm dependency versions whose published registry metadata or install-time scripts reference known malicious IOC package names, domains, URLs, or script patterns, such as `plain-crypto-js`, `@tanstack/setup`, Mini Shai-Hulud infrastructure, or reviewed shell-fetch indicators. This is narrower than full tarball signature scanning, but it can still catch compromised releases when an IOC appears in dependency metadata.
 
 ---
 

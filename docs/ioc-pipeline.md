@@ -1,12 +1,13 @@
 # IOC Blacklist Auto-Candidate Pipeline
 
-This workflow adds a daily review loop for likely blacklist entries without silently editing the live scanner data.
+This workflow adds a daily review loop for likely compromise-oriented blacklist entries without silently editing the live scanner data.
 
 ## What it does
 
 - pulls recent OSV ecosystem advisories for `npm`, `PyPI`, and `Go`
 - filters to advisories published in the last 24 hours
 - keeps only `HIGH` and `CRITICAL` candidates
+- keeps only advisories whose summary/details read like a supply-chain compromise, malicious publish, or similarly high-confidence blacklist event
 - skips package versions already present in [`pkg/analyzer/data/blacklist.json`](/Users/brian93512/projects/tooltrust-scanner/pkg/analyzer/data/blacklist.json)
 - opens one review PR with candidate blacklist entries
 
@@ -14,16 +15,17 @@ The workflow never auto-merges. A human still decides whether a candidate belong
 
 ## Why this exists
 
-Our blacklist is strong once an entry exists, but hand-editing it means we can lag major supply-chain events by hours. This pipeline narrows that gap by surfacing review-ready candidates quickly after OSV publishes an advisory.
+Our blacklist is strong once an entry exists, but hand-editing it means we can lag major supply-chain events by hours. This pipeline narrows that gap by surfacing review-ready compromise candidates quickly after OSV publishes an advisory, without turning every ordinary CVE into a hard block.
 
 ## Review checklist
 
 When the workflow opens a PR:
 
 1. confirm the affected versions are exact and narrow enough
-2. confirm `BLOCK` is the correct action
-3. rewrite the reason if the current summary is too vague for triage
-4. close the PR if the advisory is too broad, too noisy, or otherwise not suitable for blacklist enforcement
+2. confirm the advisory really belongs in the compromise blacklist rather than ordinary OSV/CVE triage
+3. confirm `BLOCK` is the correct action
+4. rewrite the reason if the current summary is too vague for triage
+5. close the PR if the advisory is too broad, too noisy, or otherwise not suitable for blacklist enforcement
 
 ## Local dry run
 

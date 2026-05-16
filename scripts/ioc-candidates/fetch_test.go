@@ -64,6 +64,32 @@ func TestFetchCandidatesWithClient_FeedFailureIsWarning(t *testing.T) {
 	}
 }
 
+func TestBuildCandidates_SkipsOrdinaryHighSeverityCVEs(t *testing.T) {
+	now := time.Date(2026, 4, 22, 0, 0, 0, 0, time.UTC)
+	vulns := []osvVulnerability{
+		{
+			ID:        "GHSA-generic-2026-0001",
+			Summary:   "Generic high severity SSRF vulnerability in admin endpoint.",
+			Published: "2026-04-21T18:00:00Z",
+			Severity:  []osvSeverity{{Type: "CVSS_V3", Score: "8.8"}},
+			Affected: []osvAffected{
+				{
+					Package: struct {
+						Name      string `json:"name"`
+						Ecosystem string `json:"ecosystem"`
+					}{Name: "genericpkg", Ecosystem: "npm"},
+					Versions: []string{"1.2.3"},
+				},
+			},
+		},
+	}
+
+	got := buildCandidates(vulns, "npm", map[string]struct{}{}, now, 24*time.Hour, "HIGH")
+	if len(got) != 0 {
+		t.Fatalf("expected ordinary CVE to be skipped, got %#v", got)
+	}
+}
+
 type httpClientStub struct{}
 
 func (h *httpClientStub) Do(*http.Request) (*http.Response, error) {
