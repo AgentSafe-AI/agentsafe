@@ -71,30 +71,31 @@ The public **[ToolTrust Directory](https://www.tooltrust.dev/)** holds **current
 
 **Only 10% of servers in that cohort had a clean Grade A.** See **[tooltrust.dev](https://www.tooltrust.dev/)** for up-to-date directory-wide results (and use this table only as a labeled snapshot).
 
-## What it catches
+## 🔍 What it catches
 
 ToolTrust runs **16** static tool-definition rules in this repo (**AS-001–AS-011**, **AS-013–AS-017**) plus **2** source-scan rules for embedded MCP implementations (**AS-018**, **AS-019**). **AS-012** (tool drift) is evaluated in the **[ToolTrust Directory](https://github.com/AgentSafe-AI/tooltrust-directory)** when new scan results are compared to previous runs.
 
-| Threat | Rule | What it detects |
-|--------|------|-----------------|
-| Prompt injection | AS-001 | Malicious instructions hidden in tool descriptions that hijack agent reasoning |
-| Excessive permissions | AS-002 | Tools requesting `exec`, `network`, `db`, or `fs` access beyond their stated purpose |
-| Scope mismatch | AS-003 | Tool names that contradict their actual permissions |
-| Supply-chain CVEs | AS-004 | Known vulnerabilities via the OSV database |
-| Privilege escalation | AS-005 | Tools requesting `admin`, `root`, or `sudo` scopes |
-| Arbitrary code execution | AS-006 | Tools that can run arbitrary scripts or shell commands on your machine |
-| Missing metadata | AS-007 | Tools with no description or input schema |
-| Known malware | AS-008 | Confirmed compromised package versions (offline blacklist) |
-| Typosquatting | AS-009 | Tool names that impersonate legitimate tools via edit-distance |
-| Insecure secret handling | AS-010 | Tools whose inputs appear designed to accept API keys, tokens, or passwords in plaintext |
-| Missing rate limits | AS-011 | Tools with no timeout or rate-limit configuration |
-| Tool shadowing | AS-013 | Duplicate tool names designed to hijack agent behavior |
-| Dependency inventory gaps | AS-014 | Tools with no dependency metadata and no repo URL, limiting supply-chain analysis |
-| Suspicious npm lifecycle scripts | AS-015 | Dependency versions that run install-time scripts with risky remote-fetch or execution patterns |
-| Suspicious npm IOC dependency | AS-016 | Registry metadata or scripts referencing known malicious IOC patterns |
-| Suspicious data exfil description | AS-017 | Descriptions suggesting forwarding user data to external endpoints (complements AS-001) |
-| Embedded MCP server detected | AS-018 | Source code contains MCP SDK imports and server initialization but no enumerable tool manifest |
-| Unauthenticated MCP route exposure | AS-019 | Embedded MCP HTTP routes expose the same handler without equivalent authentication |
+| ID | Severity | Detects |
+|----|:--------:|---------|
+| 🛡️&nbsp;**AS&#8209;001** | `Critical` | **Tool Poisoning** — Adversarial prompts hidden in tool descriptions (`ignore previous instructions`, `<INST>`) |
+| 🔑&nbsp;**AS&#8209;002** | `High`/`Low` | **Permission Surface** — `exec`, `network`, `db`, `fs` beyond stated purpose; over-broad input schema |
+| 📐&nbsp;**AS&#8209;003** | `High` | **Scope Mismatch** — Tool name contradicts its permissions (e.g. `read_config` with `exec`) |
+| 📦&nbsp;**AS&#8209;004** | `High`/`Critical` | **Supply Chain CVEs** — Known CVEs in bundled dependencies via [OSV](https://osv.dev) |
+| 🔓&nbsp;**AS&#8209;005** | `High` | **Privilege Escalation** — `admin`/`:write` OAuth scopes; `sudo`/`impersonate` in descriptions |
+| ⚡&nbsp;**AS&#8209;006** | `Critical` | **Arbitrary Code Execution** — `evaluate_script`, `_evaluate` suffix, `execute javascript`, `page.evaluate()` patterns |
+| ℹ️&nbsp;**AS&#8209;007** | `Info` | **Insufficient Tool Data** — Tool lacks a valid description or schema |
+| 🚨&nbsp;**AS&#8209;008** | `Critical` | **Known Compromised Package** — Offline embedded blacklist of confirmed supply-chain attacks (LiteLLM 1.82.7/1.82.8, Trivy v0.69.4-v0.69.6, Langflow <1.9.0, Axios 1.14.1/0.30.4). Zero-latency, no network required. |
+| 🔤&nbsp;**AS&#8209;009** | `Medium` | **Typosquatting** — Tool name within edit-distance 2 of a well-known MCP tool, suggesting impersonation |
+| 🗝️&nbsp;**AS&#8209;010** | `Medium` | **Secret Handling** — Input params accepting API keys/passwords; credentials logged insecurely |
+| ⚡&nbsp;**AS&#8209;011** | `Low` | **DoS Resilience** — No rate-limit, timeout, or retry config on network/exec tools |
+| 🔄&nbsp;**AS&#8209;012** | `High` | **Rug-Pull** — Tool set changed between scans of the same version without a version bump *(directory pipeline only)* |
+| 👥&nbsp;**AS&#8209;013** | `High`/`Medium` | **Tool Shadowing** — Duplicate or near-duplicate tool name hijacks calls intended for a trusted tool |
+| ℹ️&nbsp;**AS&#8209;014** | `Info` | **Dependency Inventory Unavailable** — MCP server exposed neither `metadata.dependencies` nor a `repo_url`, so supply-chain coverage is limited and must be treated as incomplete |
+| ⚠️&nbsp;**AS&#8209;015** | `Medium`/`High` | **Suspicious NPM Lifecycle Script** — npm dependency publishes `preinstall` / `postinstall` / similar install-time scripts; severity rises for remote-fetch or inline-execution patterns |
+| 🚨&nbsp;**AS&#8209;016** | `Critical` | **Suspicious NPM IOC Dependency** — published npm metadata or install-time scripts reference a known malicious IOC package, domain, URL, or reviewed script pattern such as `plain-crypto-js`, even if the top-level package name is new |
+| ⚠️&nbsp;**AS&#8209;017** | `Medium` | **Suspicious Data Exfiltration Description** — tool description explicitly suggests sending user data, content, or conversation history to external / remote endpoints, without classifying it as prompt injection |
+| ℹ️&nbsp;**AS&#8209;018** | `Info` | **Embedded MCP Server Detected** — source-level MCP SDK usage was found, but tools could not be enumerated from a manifest or live handshake, so manual review is still required |
+| 🔓&nbsp;**AS&#8209;019** | `High` | **Unauthenticated MCP Route Exposure** — embedded MCP HTTP routes expose the same handler without equivalent authentication middleware |
 
 Full rule details: [docs/RULES.md](docs/RULES.md)
 
