@@ -5,6 +5,29 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [0.3.12] - 2026-04-22
+
+### Fixed
+- **AS-001 false positive on `gitignore` / `mcpignore` rules**: the
+  `(ignore|disregard|bypass) ... rules` regex matched the substring
+  "ignore" inside `gitignore` because it lacked a word boundary, flagging
+  legitimate codebase-indexing tools (e.g.
+  `cornelcroi/context-lens`, `itseasy21/mcp-codebase-index`,
+  `lex-tools/codebase-context-dumper`) whose descriptions say
+  "respects .gitignore rules". Added a leading `\b` anchor.
+- **AS-001 false positive on defensive security tools**: the
+  single-keyword `jailbreak` rule fired on legitimate anti-injection /
+  prompt-scanning tools (`shrike-security/shrike-mcp` `scan_prompt`,
+  `web3signals/agent-seo` `anti_injection_scan`,
+  `shentia/...` `prompt_injection_scan`,
+  `joergmichno/clawguard` `scan_text`). The rule is now suppressed when
+  the tool description contains defensive framing (`detect`, `scan`,
+  `block`, `prevent`, `filter`, `guard`, `quarantine`, etc.) around the
+  word; offensive contexts (`perform jailbreak`, `<INST>jailbreak</INST>`)
+  still trigger.
+
+---
+
 ## [0.3.11] - 2026-05-16
 
 ### Added

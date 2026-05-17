@@ -28,12 +28,27 @@ var suspiciousNameTerms = []string{
 	"external", "remote", "http", "url", "attacker", "exfil",
 }
 
+// jailbreakPattern is the single-keyword "jailbreak" rule. It is the only
+// AS-001 pattern broad enough that a defensive security tool ("scan input
+// for jailbreak attempts", "block jailbreak prompts") trips it without
+// any malicious intent. We special-case it in Check(): when the
+// description shows defensive framing around the word, we suppress the
+// finding. The variable is shared between the rules table and the gating
+// logic via pointer identity.
+var jailbreakPattern = regexp.MustCompile(`(?i)jailbreak`)
+
 // injectionRules is the ordered list of AS-001 detection rules.
 // AS-001 is reserved for explicit prompt/instruction override patterns.
+//
+// The leading `\b` on the (ignore|disregard|bypass) rule prevents
+// false-positive matches against the substring "ignore" inside
+// `gitignore`, `mcpignore`, etc. — common in legitimate
+// codebase-indexing tool descriptions that say things like
+// "respects .gitignore rules".
 var injectionRules = []patternRule{
 	// ── High-confidence: explicit injection markers ──────────────────────────
 	{
-		regexp.MustCompile(`(?i)(ignore|disregard|bypass)\s+(?:\w+\s+){0,3}(instructions?|prompts?|context|rules?|guidelines?|restrictions?|filters?)`),
+		regexp.MustCompile(`(?i)\b(ignore|disregard|bypass)\s+(?:\w+\s+){0,3}(instructions?|prompts?|context|rules?|guidelines?|restrictions?|filters?)`),
 		model.SeverityCritical,
 	},
 	{regexp.MustCompile(`(?im)^\s*system\s*:`), model.SeverityCritical},
@@ -54,7 +69,35 @@ var injectionRules = []patternRule{
 	{regexp.MustCompile(`(?i)exfiltrate\s+(?:\w+\s+){0,2}(?:data|info|credentials?|secrets?|content|results?)`), model.SeverityCritical},
 	{regexp.MustCompile(`(?i)(developer|unrestricted)\s+mode`), model.SeverityCritical},
 	{regexp.MustCompile(`(?i)full\s+system\s+access`), model.SeverityCritical},
-	{regexp.MustCompile(`(?i)jailbreak`), model.SeverityCritical},
+	{jailbreakPattern, model.SeverityCritical},
+}
+
+// defensiveJailbreakContexts are substrings whose presence (anywhere in the
+// description) indicates the tool is describing detection / prevention of
+// jailbreaks rather than performing one. Match is case-insensitive on a
+// lowercased description. Entries are stems so that inflected forms
+// (identify/identifies, detect/detection/detected) all match.
+var defensiveJailbreakContexts = []string{
+	"detect", "scan", "block", "prevent", "filter",
+	"guard", "identif", "flag ", "report",
+	"monitor", "audit", "protect", "defense", "defensive",
+	"mitigat", "quarantin", "sanitiz",
+	"anti-jailbreak", "anti jailbreak",
+	"jailbreak attempt", "jailbreak detection", "jailbreak vector",
+	"for jailbreak", "against jailbreak",
+}
+
+// describesDefensiveJailbreakUse returns true when the description appears
+// to be discussing jailbreak detection or prevention rather than performing
+// a jailbreak. Used to suppress the lone-keyword `jailbreak` rule for
+// security tools such as `scan_prompt`, `anti_injection_scan`, etc.
+func describesDefensiveJailbreakUse(descLower string) bool {
+	for _, ctx := range defensiveJailbreakContexts {
+		if strings.Contains(descLower, ctx) {
+			return true
+		}
+	}
+	return false
 }
 
 type PoisoningChecker struct {
@@ -81,8 +124,14 @@ func (c *PoisoningChecker) Check(tool model.UnifiedTool) ([]model.Issue, error) 
 		return nil, nil
 	}
 
+	descLower := strings.ToLower(desc)
+	defensiveJailbreak := describesDefensiveJailbreakUse(descLower)
+
 	var issues []model.Issue
 	for _, rule := range injectionRules {
+		if rule.pattern == jailbreakPattern && defensiveJailbreak {
+			continue
+		}
 		if rule.pattern.MatchString(desc) {
 			matched := rule.pattern.FindString(desc)
 			issues = append(issues, model.Issue{

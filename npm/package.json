@@ -1,6 +1,6 @@
 {
   "name": "tooltrust-mcp",
-  "version": "1.1.7",
+  "version": "1.1.8",
   "description": "MCP server that scans other MCP servers for prompt injection, data exfiltration, and privilege escalation. Add to your .mcp.json and let your AI agent audit its own tools.",
   "keywords": [
     "mcp",
@@ -21,5 +21,5 @@
     "tooltrust-mcp": "bin/run.js"
   },
   "mcpName": "io.github.AgentSafe-AI/tooltrust-scanner",
-  "tooltrustBinaryVersion": "v0.3.11"
+  "tooltrustBinaryVersion": "v0.3.12"
 }
