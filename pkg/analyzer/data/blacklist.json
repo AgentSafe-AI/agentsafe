@@ -70,6 +70,36 @@
     "link": "https://thehackernews.com/2026/04/bitwarden-cli-supply-chain-attack.html"
   },
   {
+    "id": "CVE-2026-46421",
+    "component": "@cap-js/db-service",
+    "ecosystem": "npm",
+    "affected_versions": ["2.10.1"],
+    "action": "BLOCK",
+    "severity": "CRITICAL",
+    "reason": "Confirmed npm supply-chain compromise: malicious @cap-js package versions were published as part of a coordinated compromise across @cap-js/sqlite, @cap-js/postgres, and @cap-js/db-service.",
+    "link": "https://osv.dev/vulnerability/GHSA-pvw4-cvr4-97p8"
+  },
+  {
+    "id": "CVE-2026-46421",
+    "component": "@cap-js/postgres",
+    "ecosystem": "npm",
+    "affected_versions": ["2.2.2"],
+    "action": "BLOCK",
+    "severity": "CRITICAL",
+    "reason": "Confirmed npm supply-chain compromise: malicious @cap-js package versions were published as part of a coordinated compromise across @cap-js/sqlite, @cap-js/postgres, and @cap-js/db-service.",
+    "link": "https://osv.dev/vulnerability/GHSA-pvw4-cvr4-97p8"
+  },
+  {
+    "id": "CVE-2026-46421",
+    "component": "@cap-js/sqlite",
+    "ecosystem": "npm",
+    "affected_versions": ["2.2.2"],
+    "action": "BLOCK",
+    "severity": "CRITICAL",
+    "reason": "Confirmed npm supply-chain compromise: malicious @cap-js package versions were published as part of a coordinated compromise across @cap-js/sqlite, @cap-js/postgres, and @cap-js/db-service.",
+    "link": "https://osv.dev/vulnerability/GHSA-pvw4-cvr4-97p8"
+  },
+  {
     "id": "CVE-2026-45321",
     "component": "@tanstack/arktype-adapter",
     "ecosystem": "npm",
